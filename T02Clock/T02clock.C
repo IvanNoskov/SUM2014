@@ -11,14 +11,14 @@
 void DrawHour (HDC hDCP, double A, int X, int Y)
 {
   static POINT T[4];
-  T[0].x = 50 * cos( A );
-  T[0].y = -50 * sin( A );
-  T[1].x = 40 * cos( A + 1 );
-  T[1].y = -40 * sin( A + 1 );
-  T[2].x = 70 * cos( A + PI );
-  T[2].y = -70 * sin( A + PI );
-  T[3].x = 40 * cos( A - 1 );
-  T[3].y = -40 * sin( A - 1 );
+  T[0].x = X + 50 * cos( A );
+  T[0].y = Y - 50 * sin( A );
+  T[1].x = X + 40 * cos( A + 1 );
+  T[1].y = Y - 40 * sin( A + 1 );
+  T[2].x = X + 70 * cos( A + PI );
+  T[2].y = Y - 70 * sin( A + PI );
+  T[3].x = X + 40 * cos( A - 1 );
+  T[3].y = Y - 40 * sin( A - 1 );
 
   SelectObject( hDCP, GetStockObject( DC_PEN ) );
   SelectObject( hDCP, GetStockObject( DC_BRUSH ) );
@@ -39,6 +39,7 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam
   static HBITMAP hBm, hBmLogo;
   SYSTEMTIME Time;
   static double Hour, Min, Sec;
+  static POINT Trangle[3] = {{10, 10}, {100, 15}, {15, 100}};
   switch(Msg)
   {
   case WM_CREATE:
@@ -60,15 +61,22 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam
     GetSystemTime( &Time );
     Sec = 60.0 * 2 * PI / Time.wSecond;
     Min = 60 * 60.0 * 2 * PI / (60 * Time.wMinute + Time.wSecond);
-    Hour = 60 * 60 * 60.0 * 2 * PI / (3600 * Time.wHour + 60 * Time.wMinute + Time.wSecond);
+    Hour = 12 * 60 * 60.0 * 2 * PI / (120 * (Time.wHour % 12) + 60 * Time.wMinute + Time.wSecond);
     InvalidateRect( hWnd, NULL, FALSE);
-  case WM_CLOSE:
     break;
   case WM_DESTROY:
+    KillTimer(hWnd, 30);
+    DeleteObject( hBm );
+    DeleteDC( hMemDC );
     PostQuitMessage(0);
     return 0;
   case WM_PAINT:
     hDC = BeginPaint( hWnd, &ps );
+    SelectObject( hDC, GetStockObject( DC_PEN ) );
+    SelectObject( hDC, GetStockObject( DC_BRUSH ) );
+    SetDCPenColor( hDC, RGB( 0, 0, 0 ) );
+    SetDCBrushColor( hDC, RGB( 255, 0, 255 ) );
+    Rectangle( hMemDC, 0, 0, W, H);
     DrawHour(hMemDC, Hour, W / 2, H / 2);
     BitBlt(hDC, 0, 0, W, H, hMemDC, 0, 0, SRCCOPY);
     EndPaint( hWnd, &ps );

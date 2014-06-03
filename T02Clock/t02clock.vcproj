@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="T00FIRST"
+	Name="T02clock"
 	ProjectGUID="{D1A80F30-68DA-4DCE-814B-D31AD84021BC}"
-	RootNamespace="T00FIRST"
+	RootNamespace="T02clock"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
