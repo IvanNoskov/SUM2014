@@ -10,62 +10,105 @@
 
 void DrawSec (HDC hDCP, double A, int X, int Y)
 {
-  static POINT T[4];
-  T[0].x = X - 50 * sin( A );
-  T[0].y = Y + 50 * cos( A );
-  T[1].x = X - 40 * sin( A + 1 );
-  T[1].y = Y + 40 * cos( A + 1 );
-  T[2].x = X - 70 * sin( A + PI );
-  T[2].y = Y + 70 * cos( A + PI );
-  T[3].x = X - 40 * sin( A - 1 );
-  T[3].y = Y + 40 * cos( A - 1 );
-
+  static POINT T[5];
   SelectObject( hDCP, GetStockObject( DC_PEN ) );
   SelectObject( hDCP, GetStockObject( DC_BRUSH ) );
   SetDCPenColor( hDCP, RGB( 0, 0, 0 ) );
   SetDCBrushColor( hDCP, RGB( 255, 100, 100 ) );
-
-  Polygon( hDCP, T, 4 );
+  T[0].x = X - 10 * sin( A );
+  T[0].y = Y + 10 * cos( A );
+  T[1].x = X - 30 * sin( A + 1 );
+  T[1].y = Y + 30 * cos( A + 1 );
+  T[3].x = X - 30 * sin( A - 1 );
+  T[3].y = Y + 30 * cos( A - 1 );
+  T[2].x = X - 70 * sin( A + (PI + 0.1) );
+  T[2].y = Y + 70 * cos( A + (PI + 0.1) );
+  T[4].x = X - 70 * sin( A - (PI + 0.1) );
+  T[4].y = Y + 70 * cos( A - (PI + 0.1) );
+  Polygon( hDCP, T, 5 );
+  T[0].x = X - 10 * sin( A );
+  T[0].y = Y + 10 * cos( A );
+  T[1].x = X - 30 * sin( A - 1 );
+  T[1].y = Y + 30 * cos( A - 1 );
+  T[3].x = X - 30 * sin( A + 1 );
+  T[3].y = Y + 30 * cos( A + 1 );
+  T[2].x = X - 70 * sin( A - (PI + 0.1) );
+  T[2].y = Y + 70 * cos( A - (PI + 0.1) );
+  T[4].x = X - 70 * sin( A + (PI + 0.1) );
+  T[4].y = Y + 70 * cos( A + (PI + 0.1) );
+  Polygon( hDCP, T, 5 );
 }
 
 void DrawMin (HDC hDCP, double A, int X, int Y)
 {
-  static POINT T[4];
-  T[0].x = X - 70 * sin( A );
-  T[0].y = Y + 70 * cos( A );
-  T[1].x = X - 60 * sin( A + 1 );
-  T[1].y = Y + 60 * cos( A + 1 );
-  T[2].x = X - 90 * sin( A + PI );
-  T[2].y = Y + 90 * cos( A + PI );
-  T[3].x = X - 60 * sin( A - 1 );
-  T[3].y = Y + 60 * cos( A - 1 );
-
+  static POINT T[5];
   SelectObject( hDCP, GetStockObject( DC_PEN ) );
   SelectObject( hDCP, GetStockObject( DC_BRUSH ) );
   SetDCPenColor( hDCP, RGB( 0, 0, 0 ) );
   SetDCBrushColor( hDCP, RGB( 100, 255, 100 ) );
-
-  Polygon( hDCP, T, 4 );
+  T[0].x = X - 25 * sin( A );
+  T[0].y = Y + 25 * cos( A );
+  T[1].x = X - 25 * sin( A + PI / 2 );
+  T[1].y = Y + 25 * cos( A + PI / 2 );
+  T[3].x = X - 40 * sin( A + PI * 2 / 3 );
+  T[3].y = Y + 40 * cos( A + PI * 2 / 3 );
+  T[2].x = X - 60 * sin( A - PI / 2 );
+  T[2].y = Y + 60 * cos( A - PI / 2 );
+  T[4].x = X - 90 * sin( A + PI );
+  T[4].y = Y + 90 * cos( A + PI );
+  Polygon( hDCP, T, 5 );
+  T[0].x = X - 25 * sin( A );
+  T[0].y = Y + 25 * cos( A );
+  T[1].x = X - 25 * sin( A - PI / 2 );
+  T[1].y = Y + 25 * cos( A - PI / 2 );
+  T[3].x = X - 40 * sin( A - PI * 2 / 3 );
+  T[3].y = Y + 40 * cos( A - PI * 2 / 3 );
+  T[2].x = X - 60 * sin( A + PI / 2 );
+  T[2].y = Y + 60 * cos( A + PI / 2 );
+  T[4].x = X - 90 * sin( A - PI );
+  T[4].y = Y + 90 * cos( A - PI );
+  Polygon( hDCP, T, 5 );
 }
 
 void DrawHour (HDC hDCP, double A, int X, int Y)
 {
-  static POINT T[4];
-  T[0].x = X - 90 * sin( A );
-  T[0].y = Y + 90 * cos( A );
-  T[1].x = X - 80 * sin( A + 1 );
-  T[1].y = Y + 80 * cos( A + 1 );
-  T[2].x = X - 110 * sin( A + PI );
-  T[2].y = Y + 110 * cos( A + PI );
-  T[3].x = X - 80 * sin( A - 1 );
-  T[3].y = Y + 80 * cos( A - 1 );
-
+  static POINT T[5];
   SelectObject( hDCP, GetStockObject( DC_PEN ) );
   SelectObject( hDCP, GetStockObject( DC_BRUSH ) );
+  T[0].x = X - 25 * sin( A );
+  T[0].y = Y + 25 * cos( A );
+  T[1].x = X - 20 * sin( A + 0.5 );
+  T[1].y = Y + 20 * cos( A + 0.5 );
+  T[2].x = X - 120 * sin( A + PI );
+  T[2].y = Y + 120 * cos( A + PI );
+  T[3].x = X - 20 * sin( A - 0.5 );
+  T[3].y = Y + 20 * cos( A - 0.5 );
   SetDCPenColor( hDCP, RGB( 0, 0, 0 ) );
-  SetDCBrushColor( hDCP, RGB( 100, 100, 255 ) );
-
+  SetDCBrushColor( hDCP, RGB( 10, 10, 155 ) );
   Polygon( hDCP, T, 4 );
+  SetDCBrushColor( hDCP, RGB( 150, 150, 255 ) );
+  T[0].x = X - 60 * sin( A + 0.3 );
+  T[0].y = Y + 60 * cos( A + 0.3 );
+  T[1].x = X - 50 * sin( A + 0.5 );
+  T[1].y = Y + 50 * cos( A + 0.5 );
+  T[4].x = X - 120 * sin( A + PI );
+  T[4].y = Y + 120 * cos( A + PI );
+  T[2].x = X - 70 * sin( A + 0.6 );
+  T[2].y = Y + 70 * cos( A + 0.6 );
+  T[3].x = X - 35 * sin( A + PI );
+  T[3].y = Y + 35 * cos( A + PI );
+  Polygon( hDCP, T, 5 );
+  T[0].x = X - 60 * sin( A - 0.3 );
+  T[0].y = Y + 60 * cos( A - 0.3 );
+  T[1].x = X - 50 * sin( A - 0.5 );
+  T[1].y = Y + 50 * cos( A - 0.5 );
+  T[4].x = X - 120 * sin( A - PI );
+  T[4].y = Y + 120 * cos( A - PI );
+  T[2].x = X - 70 * sin( A - 0.6 );
+  T[2].y = Y + 70 * cos( A - 0.6 );
+  T[3].x = X - 35 * sin( A - PI );
+  T[3].y = Y + 35 * cos( A - PI );
+  Polygon( hDCP, T, 5 );
 }
 
 
@@ -99,7 +142,7 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam
     SelectObject( hMemDC, hDC );
   case WM_TIMER:
     GetLocalTime( &Time );
-    Sec = (double)2 * PI * Time.wSecond / 60;
+    Sec = (double)2 * PI * (Time.wSecond / 60.0 + Time.wMilliseconds / 60000.0);
     Min = (double)2 * PI * (Time.wMinute * 60 + Time.wSecond) / (60 * 60);
     Hour = (double)2 * PI * ((Time.wHour % 12) * 60 * 60 + Time.wMinute * 60 + Time.wSecond) / (12 * 60 * 60);
     InvalidateRect( hWnd, NULL, FALSE);
