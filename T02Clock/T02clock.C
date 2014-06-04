@@ -170,6 +170,36 @@ void DrawDayOfWeek (HDC hDCP, double A, int X, int Y)
   Polygon( hDCP, T, 4 );
 }
 
+VOID FlipFullScreen( HWND hWnd )
+{
+  static BOOL IsFullScreen = FALSE;
+  static RECT SaveRC;              
+
+  if (!IsFullScreen)
+  {
+    RECT rc;
+    GetWindowRect(hWnd, &SaveRC);
+    rc.left = 0;
+    rc.top = 0;
+    rc.right = GetSystemMetrics(SM_CXSCREEN);
+    rc.bottom = GetSystemMetrics(SM_CYSCREEN);
+    AdjustWindowRect(&rc, GetWindowLong(hWnd, GWL_STYLE), FALSE);
+    SetWindowPos(hWnd, HWND_TOPMOST,
+      rc.left, rc.top,
+      rc.right - rc.left, rc.bottom - rc.top,
+      SWP_NOOWNERZORDER);
+    IsFullScreen = TRUE;
+  }
+  else
+  {
+    SetWindowPos(hWnd, HWND_TOP,
+      SaveRC.left, SaveRC.top,
+      SaveRC.right - SaveRC.left, SaveRC.bottom - SaveRC.top,
+      SWP_NOOWNERZORDER);
+    IsFullScreen = FALSE;
+  }
+}
+
 
 
 LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
@@ -177,7 +207,8 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam
   HDC hDC;
   PAINTSTRUCT ps;
   RECT rc;
-  static INT W, H;
+  CHAR ch;
+  static INT W, H, SM;
   static HDC hMemDC, hDCLogo;
   static HBITMAP hBm, hBmLogo;
   static BITMAP BmLogo;
@@ -193,15 +224,27 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam
   case WM_SIZE:
     H = HIWORD(lParam);
     W = LOWORD(lParam);
+    if (H < W)
+      SM = H;
+    else
+      SM = W;
     if (hBm != NULL)
       DeleteObject(hBm);
     hDC = GetDC( hWnd );
     hBm = CreateCompatibleBitmap( hDC, W, H );
     ReleaseDC( hWnd, hDC );
     SelectObject( hMemDC, hDC );
+    break;
+  case WM_CHAR:
+    ch = (CHAR)wParam;
+    if (ch == 27)
+      SendMessage( hWnd, WM_DESTROY, 0, 0);
+    else if (ch == 'f')
+      FlipFullScreen( hWnd );
+    break;
   case WM_TIMER:
     GetLocalTime( &Time );
-    MSec = (double)2 * PI * (Time.wMilliseconds / 1000.0);
+    MSec = (double)2 * PI * (Time.wMilliseconds / 1000.0);                                                                                       
     Sec = (double)2 * PI * (Time.wSecond / 60.0 + Time.wMilliseconds / 60000.0);
     Min = (double)2 * PI * (Time.wMinute * 60 + Time.wSecond) / (60 * 60);
     Hour = (double)2 * PI * ((Time.wHour % 12) * 60 * 60 + Time.wMinute * 60 + Time.wSecond) / (12 * 60 * 60);
@@ -232,6 +275,7 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam
     DrawSec( hMemDC, Sec, W / 2, H / 2 );
     DrawMSec( hMemDC, MSec, W / 2, H / 2 );
     BitBlt( hDC, 0, 0, W, H, hMemDC, 0, 0, SRCCOPY);
+    /*  StretchBlt( hDC, (W - SM) / 2, (H - SM) / 2, SM, SM, hMemDC, (W - BmLogo.bmWidth) / 2, (H - BmLogo.bmHeight) / 2, (W + BmLogo.bmWidth) / 2, (H + BmLogo.bmHeight) / 2, SRCCOPY);*/
     DeleteDC( hMemDC );
     DeleteDC( hDCLogo );
     EndPaint( hWnd, &ps );
