@@ -4,7 +4,7 @@
 
 #include <windows.h>
 
-#define Nmax 10
+#define Nmax 5
 
 void PrintMas( INT *Mas, FILE *F, INT P )
 {
