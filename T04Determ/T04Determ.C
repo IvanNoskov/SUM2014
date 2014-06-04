@@ -79,11 +79,12 @@ int main ( int argc, char *argv[] )
   }
   if (N <= 0)
   {
-    MessageBox(NULL, "imposible matric size\n", "ERROR", MB_OK | MB_ICONERROR);
+    MessageBox(NULL, "imposible matrix size\n", "ERROR", MB_OK | MB_ICONERROR);
+    return 0;
   }
   if (N > Nmax)
   {
-    MessageBox(NULL, "Too big matric\nmaric will be cut to posible size", "ERROR", MB_OK | MB_ICONERROR);
+    MessageBox(NULL, "Too big matrix\nmatrix will be cut to posible size", "ERROR", MB_OK | MB_ICONERROR);
   }
   MakePermutation(0, Mass, 1);
   sprintf(Buf, "Def(A) = %lf", Det);
