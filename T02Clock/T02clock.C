@@ -8,6 +8,38 @@
 #define WND_CLASS_NAME "my_fist's_window_class"
 #define PI ((double)(3.1415926535897))
 
+void DrawMSec (HDC hDCP, double A, int X, int Y)
+{
+  static POINT T[5];
+  SelectObject( hDCP, GetStockObject( DC_PEN ) );
+  SelectObject( hDCP, GetStockObject( DC_BRUSH ) );
+  SetDCPenColor( hDCP, RGB( 0, 0, 0 ) );
+  SetDCBrushColor( hDCP, RGB( 255, 255, 255 ) );
+  T[0].x = X - 0 * sin( A  + (PI) );
+  T[0].y = Y + 0 * cos( A  + (PI) );
+  T[1].x = X - 50 * sin( A + 1 );
+  T[1].y = Y + 50 * cos( A + 1 );
+  T[3].x = X - 50 * sin( A + 1 );
+  T[3].y = Y + 50 * cos( A + 1 );
+  T[2].x = X - 47 * sin( A + (PI + 0.1) );
+  T[2].y = Y + 47 * cos( A + (PI + 0.1) );
+  T[4].x = X - 45 * sin( A + (PI) );
+  T[4].y = Y + 45 * cos( A + (PI) );
+  Polygon( hDCP, T, 5 );
+  T[0].x = X - 0 * sin( A - (PI) );
+  T[0].y = Y + 0 * cos( A - (PI) );
+  T[1].x = X - 50 * sin( A - 1 );
+  T[1].y = Y + 50 * cos( A - 1 );
+  T[3].x = X - 50 * sin( A - 1 );
+  T[3].y = Y + 50 * cos( A - 1 );
+  T[2].x = X - 47 * sin( A - (PI + 0.1) );
+  T[2].y = Y + 47 * cos( A - (PI + 0.1) );
+  T[4].x = X - 45 * sin( A - (PI) );
+  T[4].y = Y + 45 * cos( A - (PI) );
+  Polygon( hDCP, T, 5 );
+}
+
+
 void DrawSec (HDC hDCP, double A, int X, int Y)
 {
   static POINT T[5];
@@ -111,6 +143,33 @@ void DrawHour (HDC hDCP, double A, int X, int Y)
   Polygon( hDCP, T, 5 );
 }
 
+void DrawDayOfWeek (HDC hDCP, double A, int X, int Y)
+{
+  static POINT T[4];
+  SetTextColor( hDCP, RGB( 0, 0, 0 ) );
+  SetBkMode( hDCP, TRANSPARENT );
+  TextOut( hDCP, X + 160 * sin(PI * 2 / 7 * 0) - 8, Y - 160 * cos(PI * 2 / 7 * 0) - 8, "SU", 2);
+  TextOut( hDCP, X + 160 * sin(PI * 2 / 7 * 1) - 8, Y - 160 * cos(PI * 2 / 7 * 1) - 8, "MO", 2);
+  TextOut( hDCP, X + 160 * sin(PI * 2 / 7 * 2) - 8, Y - 160 * cos(PI * 2 / 7 * 2) - 8, "TU", 2);
+  TextOut( hDCP, X + 160 * sin(PI * 2 / 7 * 3) - 8, Y - 160 * cos(PI * 2 / 7 * 3) - 8, "WE", 2);
+  TextOut( hDCP, X + 160 * sin(PI * 2 / 7 * 4) - 8, Y - 160 * cos(PI * 2 / 7 * 4) - 8, "TH", 2);
+  TextOut( hDCP, X + 160 * sin(PI * 2 / 7 * 5) - 8, Y - 160 * cos(PI * 2 / 7 * 5) - 8, "FR", 2);
+  TextOut( hDCP, X + 160 * sin(PI * 2 / 7 * 6) - 8, Y - 160 * cos(PI * 2 / 7 * 6) - 8, "SA", 2);
+  SelectObject( hDCP, GetStockObject( DC_PEN ) );
+  SelectObject( hDCP, GetStockObject( DC_BRUSH ) );
+  T[0].x = X - 30 * sin( A );
+  T[0].y = Y + 30 * cos( A );
+  T[1].x = X - 10 * sin( A + 1 );
+  T[1].y = Y + 10 * cos( A + 1 );
+  T[2].x = X - 150 * sin( A + PI );
+  T[2].y = Y + 150 * cos( A + PI );
+  T[3].x = X - 10 * sin( A - 1 );
+  T[3].y = Y + 10 * cos( A - 1 );
+  SetDCPenColor( hDCP, RGB( 0, 0, 0 ) );
+  SetDCBrushColor( hDCP, RGB( 10, 10, 10 ) );
+  Polygon( hDCP, T, 4 );
+}
+
 
 
 LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
@@ -123,11 +182,11 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam
   static HBITMAP hBm, hBmLogo;
   static BITMAP BmLogo;
   SYSTEMTIME Time;
-  static double Hour, Min, Sec;
+  static double Hour, Min, Sec, DayOfWeek, MSec;
   switch(Msg)
   {
   case WM_CREATE:
-    SetTimer( hWnd, 30, 100, NULL );
+    SetTimer( hWnd, 30, 1, NULL );
     hBmLogo = LoadImage( NULL, "clockface.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
     GetObject(hBmLogo, sizeof(BITMAP), &BmLogo);
     return 0;
@@ -142,9 +201,11 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam
     SelectObject( hMemDC, hDC );
   case WM_TIMER:
     GetLocalTime( &Time );
+    MSec = (double)2 * PI * (Time.wMilliseconds / 1000.0);
     Sec = (double)2 * PI * (Time.wSecond / 60.0 + Time.wMilliseconds / 60000.0);
     Min = (double)2 * PI * (Time.wMinute * 60 + Time.wSecond) / (60 * 60);
     Hour = (double)2 * PI * ((Time.wHour % 12) * 60 * 60 + Time.wMinute * 60 + Time.wSecond) / (12 * 60 * 60);
+    DayOfWeek = (double)2 * PI * ((Time.wDayOfWeek + Time.wHour / 24.0) / 7.0);
     InvalidateRect( hWnd, NULL, FALSE);
     break;
   case WM_DESTROY:
@@ -165,9 +226,11 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam
     SetDCBrushColor( hMemDC, RGB( 255, 255, 255 ) );
     Rectangle( hMemDC, 0, 0, W, H);
     BitBlt( hMemDC, (W - BmLogo.bmWidth) / 2, (H - BmLogo.bmHeight) / 2, BmLogo.bmWidth, BmLogo.bmHeight, hDCLogo, 0, 0, SRCCOPY);
-    DrawHour(hMemDC, Hour, W / 2, H / 2);
-    DrawMin(hMemDC, Min, W / 2, H / 2);
-    DrawSec(hMemDC, Sec, W / 2, H / 2);
+    DrawDayOfWeek( hMemDC, DayOfWeek, W / 2, H / 2 );
+    DrawHour( hMemDC, Hour, W / 2, H / 2 );
+    DrawMin( hMemDC, Min, W / 2, H / 2 );
+    DrawSec( hMemDC, Sec, W / 2, H / 2 );
+    DrawMSec( hMemDC, MSec, W / 2, H / 2 );
     BitBlt( hDC, 0, 0, W, H, hMemDC, 0, 0, SRCCOPY);
     DeleteDC( hMemDC );
     DeleteDC( hDCLogo );
