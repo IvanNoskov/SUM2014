@@ -30,7 +30,7 @@ BOOL ReadMatric(char *FileName)
   return TRUE;
 }
 
-void PrintMas( INT *Mas, INT P )
+/*void PrintMas( INT *Mas, INT P )
 {
   int i;
   double Temp = 1.0;
@@ -62,16 +62,68 @@ void MakePermutation(INT K, INT *Mas, INT P)
     MakePermutation( K + 1, Mas, -P);
     SVAP_int(&(Mas[K]), &(Mas[i]));
   }
+} */
+
+void Switc_Str (INT a, INT b)
+{
+  INT i;
+  DOUBLE Temp;
+  for(i = 0; i < N; i++)
+  {
+    Temp = Matric[a][i];
+    Matric[a][i] = Matric[b][i];
+    Matric[b][i] = Temp;
+  }
 }
 
+BOOL Vidilenie ( void )
+{
+  INT i, j, h;
+  double B;
+  BOOL Det0;
+  for(i = 0; i < N; i++)
+  {
+    if (Matric[i][i] == 0)
+    {
+      for (j = i + 1, Det0 = TRUE; j < N; j++)
+      {
+        if (Matric[j][i] != 0)
+        {
+          Switc_Str(i, j);
+          Det0 = FALSE;
+          break;
+        }
+      }
+      if (Det0)
+        return FALSE;
+    }
+    for (j = i + 1; j < N; j++)
+    {
+      B = Matric[j][i] / Matric[i][i];
+      for (h = i; h < N; h++)
+      {
+         Matric[j][h] -= B * Matric[i][h]; 
+      }
+    }
+  }
+  return TRUE;
+}
+
+void DetCount ( void )
+{
+  INT i;
+  Det = 1.0;
+  for (i = 0; i < N; i++)
+    Det *= Matric[i][i];
+}
 
 int main ( int argc, char *argv[] )
 {
-  INT Mass[Nmax], i;
+/*  INT Mass[Nmax], i; */
   char Buf[50];
   Det = 0;
-  for (i = 0; i < Nmax; i++)
-    Mass[i] = i;
+/*  for (i = 0; i < Nmax; i++)
+    Mass[i] = i;  */
   if (!ReadMatric( defolteFileName ))
   {
     MessageBox(NULL, "Can't Open file\n", "ERROR", MB_OK | MB_ICONERROR);
@@ -86,7 +138,8 @@ int main ( int argc, char *argv[] )
   {
     MessageBox(NULL, "Too big matrix\nmatrix will be cut to posible size", "ERROR", MB_OK | MB_ICONERROR);
   }
-  MakePermutation(0, Mass, 1);
+  if (Vidilenie())
+    DetCount();
   sprintf(Buf, "Def(A) = %lf", Det);
   MessageBox(NULL, Buf, "Sucses", MB_OK | MB_ICONINFORMATION);
   return 0;
