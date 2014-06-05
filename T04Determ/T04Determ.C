@@ -1,4 +1,4 @@
-/* NI01, 02.06.2014 */
+/* NI01, 05.06.2014 */
 
 #include <stdio.h>
 
@@ -6,64 +6,51 @@
 
 #define Nmax 7
 #define defolteFileName "matric.txt"
+#define toleranse (double)0.0000001
 
+/* Matric[Nmax][Nmax] - matrix memory
+ * Det - matrix Determinator
+ * N - matrix size
+ * Sign - sign of modified matrix Determinator < {-1, 1}
+ */
 double Matric[Nmax][Nmax], Det;
 INT N, Sign;
 
+/*Read Matrix fom "Filemame" file*/
 BOOL ReadMatric(char *FileName)
 {
+/* *F - input file
+ * i, j - counters
+ * Tresh - Temp sourse for Matrc cutting
+ */
   FILE *F;
   INT i, j;
   DOUBLE Tresh;
+  /* open file*/
   if((F = fopen(FileName, "r")) == NULL)
+    /* file didn't open*/
     return FALSE;
+  /* read matrix size*/
   fscanf(F, "%i", &N);
+  /* read matrix*/
   for(i = 0; i < N; i++)
     for(j = 0; j < N; j++)
     {
+      /* read matrix element whis allowable indexs*/
       if (i < Nmax && j < Nmax)
         fscanf(F, "%lf", &(Matric[i][j]));
+      /* cut matrix element whis unallowable indexs*/
       else
         fscanf(F, "%lf", &Tresh);
     }
+  /* close file*/
   fclose(F);
+  /* sucsess indicator*/
   return TRUE;
 }
 
-/*void PrintMas( INT *Mas, INT P )
-{
-  int i;
-  double Temp = 1.0;
-  for( i = 0; i < N; i++ )
-    Temp *= Matric[i][Mas[i]];
-  Det += P * Temp;
-}
 
-void SVAP_int(INT *A, INT *B)
-{
-  INT T;
-  T = *A;
-  *A = *B;
-  *B = T;
-}
-
-void MakePermutation(INT K, INT *Mas, INT P)
-{
-  int i;
-  if (K == N - 1)
-  {
-    PrintMas(Mas, P);
-    return;
-  }
-  MakePermutation( K + 1, Mas, P);
-  for(i = K + 1; i < N; i++)
-  {
-    SVAP_int(&(Mas[K]), &(Mas[i]));
-    MakePermutation( K + 1, Mas, -P);
-    SVAP_int(&(Mas[K]), &(Mas[i]));
-  }
-} */
-
+/* Count ABS of X */
 DOUBLE ModX (DOUBLE X)
 {
   if (X < 0)
@@ -71,8 +58,12 @@ DOUBLE ModX (DOUBLE X)
   return X;
 }
 
+/* Swap Matric[a][?] and Matric[b][?]*/
 void Switc_Str (INT a, INT b)
 {
+/* i - counter
+ * Temp - Temp sourse for Swapping
+ */
   INT i;
   DOUBLE Temp;
   for(i = 0; i < N; i++)
@@ -83,8 +74,12 @@ void Switc_Str (INT a, INT b)
   }
 }
 
+/* Swap Matric[?][a] and Matric[?][b]*/
 void Switc_Sto (INT a, INT b)
 {
+/* i - counter
+ * Temp - Temp sourse for Swapping
+ */
   INT i;
   DOUBLE Temp;
   for(i = 0; i < N; i++)
@@ -95,13 +90,18 @@ void Switc_Sto (INT a, INT b)
   }
 }
 
+/* Trunsform Matric to upper tringalar form vihtout chandje Deteminator ABC*/
 BOOL Vidilenie ( void )
 {
+/* i, j, h - counters
+ * j1, h1 - Temp sourse for MAX( Matric[j][h] ) search
+ * B - Temp sourse for Matric[j][i] / Matric[i][i] ratio
+ */
   INT i, j, h, h1, j1;
   double B;
-  BOOL Det0;
   for(i = 0; i < N; i++)
   {
+    /* search MAX( Matric[j][h] ); i <= j < N, i <= h < N, result in Matric[j1][h1]*/
     j1 = h1 = i;
     for (j = i; j < N; j++)
     {
@@ -113,8 +113,10 @@ BOOL Vidilenie ( void )
         }
       }
     }
-    if (Matric[j1][h1] == 0)
+    /* if Matric[j1][h1] == 0 indicate this and fail out of function*/
+    if (ModX( Matric[j1][h1] ) <= toleranse)
       return FALSE;
+    /* Swap Matric[j1][h1] and Matric[i][i] whis counting matrix Determination sign*/
     if (j1 != i)
     {
       Switc_Str( i, j1 );
@@ -125,6 +127,7 @@ BOOL Vidilenie ( void )
       Switc_Sto( i, h1 );
       Sign = -Sign;
     }
+    /* set Matric[j][i] to 0; i < j < N, without chanje Determinator*/
     for (j = i + 1; j < N; j++)
     {
       B = Matric[j][i] / Matric[i][i];
@@ -134,9 +137,11 @@ BOOL Vidilenie ( void )
       }
     }
   }
+  /* sucsess indicator*/
   return TRUE;
 }
 
+/* counting matric Determinator*/
 void DetCount ( void )
 {
   INT i;
@@ -147,28 +152,38 @@ void DetCount ( void )
 
 int main ( int argc, char *argv[] )
 {
-/*  INT Mass[Nmax], i; */
+/* Buf[50] - String Buffer for filename and result messege
+ */
   char Buf[50];
+/* defult Det and Sign*/
   Det = 0;
   Sign = 1;
-/*  for (i = 0; i < Nmax; i++)
-    Mass[i] = i;  */
-  if (!ReadMatric( defolteFileName ))
+/* Scan filename*/
+  printf("Input file Name\n");
+  scanf("%s", Buf);
+/* Scan matrix*/
+  if (!ReadMatric( Buf ))
   {
+    /* File didn't open*/
     MessageBox(NULL, "Can't Open file\n", "ERROR", MB_OK | MB_ICONERROR);
     return 0;
   }
   if (N <= 0)
   {
+    /* input matrix size is not positive*/
     MessageBox(NULL, "imposible matrix size\n", "ERROR", MB_OK | MB_ICONERROR);
     return 0;
   }
   if (N > Nmax)
   {
+    /* input matrix size is bigget then maximum allowed value*/
     MessageBox(NULL, "Too big matrix\nmatrix will be cut to posible size", "ERROR", MB_OK | MB_ICONERROR);
   }
+  /* matrix transformate*/
   if (Vidilenie())
+    /* counting nonzero Determinator*/
     DetCount();
+  /* output Determinator*/
   sprintf(Buf, "Def(A) = %lf", Det);
   MessageBox(NULL, Buf, "Sucses", MB_OK | MB_ICONINFORMATION);
   return 0;
