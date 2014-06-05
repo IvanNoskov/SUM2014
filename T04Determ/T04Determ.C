@@ -8,7 +8,7 @@
 #define defolteFileName "matric.txt"
 
 double Matric[Nmax][Nmax], Det;
-INT N;
+INT N, Sign;
 
 BOOL ReadMatric(char *FileName)
 {
@@ -64,6 +64,13 @@ void MakePermutation(INT K, INT *Mas, INT P)
   }
 } */
 
+DOUBLE ModX (DOUBLE X)
+{
+  if (X < 0)
+    return -X;
+  return X;
+}
+
 void Switc_Str (INT a, INT b)
 {
   INT i;
@@ -76,26 +83,47 @@ void Switc_Str (INT a, INT b)
   }
 }
 
+void Switc_Sto (INT a, INT b)
+{
+  INT i;
+  DOUBLE Temp;
+  for(i = 0; i < N; i++)
+  {
+    Temp = Matric[i][a];
+    Matric[i][a] = Matric[i][b];
+    Matric[i][b] = Temp;
+  }
+}
+
 BOOL Vidilenie ( void )
 {
-  INT i, j, h;
+  INT i, j, h, h1, j1;
   double B;
   BOOL Det0;
   for(i = 0; i < N; i++)
   {
-    if (Matric[i][i] == 0)
+    j1 = h1 = i;
+    for (j = i; j < N; j++)
     {
-      for (j = i + 1, Det0 = TRUE; j < N; j++)
+      for (h = i; h < N; h++)
       {
-        if (Matric[j][i] != 0)
+        if (ModX( Matric[j][h] ) > ModX( Matric[j1][h1] ))
         {
-          Switc_Str(i, j);
-          Det0 = FALSE;
-          break;
+          j1 = j, h1 = h;
         }
       }
-      if (Det0)
-        return FALSE;
+    }
+    if (Matric[j1][h1] == 0)
+      return FALSE;
+    if (j1 != i)
+    {
+      Switc_Str( i, j1 );
+      Sign = -Sign;
+    }
+    if (h1 != i)
+    {
+      Switc_Sto( i, h1 );
+      Sign = -Sign;
     }
     for (j = i + 1; j < N; j++)
     {
@@ -112,7 +140,7 @@ BOOL Vidilenie ( void )
 void DetCount ( void )
 {
   INT i;
-  Det = 1.0;
+  Det = Sign;
   for (i = 0; i < N; i++)
     Det *= Matric[i][i];
 }
@@ -122,6 +150,7 @@ int main ( int argc, char *argv[] )
 /*  INT Mass[Nmax], i; */
   char Buf[50];
   Det = 0;
+  Sign = 1;
 /*  for (i = 0; i < Nmax; i++)
     Mass[i] = i;  */
   if (!ReadMatric( defolteFileName ))
