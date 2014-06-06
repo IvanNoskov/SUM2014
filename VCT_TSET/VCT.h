@@ -136,19 +136,16 @@ __inline MATRIX MatrTranslate( DOUBLE dX, DOUBLE dY, DOUBLE dZ )
 __inline MATRIX MatrRotateX( DOUBLE AngleInDeg )
 {
   MATRIX M = UnitMatrix;
+  FLT cosis, sisis;
   _asm {
     fld  AngleInDeg
     fmul MultiplierDegree2Radian
     fsincos
-    fld  st(0)
-    fstp M.A[1][1] 
-    fstp M.A[2][2] 
-    fld  st(0) 
-    fstp M.A[1][2] 
-    fldz       
-    fsubr      
-    fstp M.A[2][1] 
+    fstp cosis 
+    fstp sisis 
   }
+  M.A[1][1] = cosis, M.A[2][2] = cosis;
+  M.A[1][2] = sisis, M.A[2][1] = -sisis;
   return M;
 }
 

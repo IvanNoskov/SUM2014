@@ -153,7 +153,7 @@ INT WINAPI WinMain ( HINSTANCE hInstance, HINSTANCE hPrevInstanse, CHAR *CmdLine
   MATRIX M1, M2, M3;
   VEC V1, V2;
   static char BUF[300];
-  M1 = MatrIdenity( );
+/*  M1 = MatrIdenity( );
   PrintMatrix( BUF, M1 );
   MessageBox( NULL, BUF, "I matric ( M1 )", MB_OK | MB_ICONINFORMATION );
   M1 = MatrTranslate( 1, 3, 25 );
@@ -179,6 +179,15 @@ INT WINAPI WinMain ( HINSTANCE hInstance, HINSTANCE hPrevInstanse, CHAR *CmdLine
   MessageBox( NULL, BUF, " M3 * M2 ( M1 )", MB_OK | MB_ICONINFORMATION );
   M1 = MatrMulMatr( M2, M3 );
   PrintMatrix( BUF, M1 );
-  MessageBox( NULL, BUF, " M2 * M3 ( M1 )", MB_OK | MB_ICONINFORMATION );
+  MessageBox( NULL, BUF, " M2 * M3 ( M1 )", MB_OK | MB_ICONINFORMATION );*/
+  M1 = MatrRotateX( 30 );
+  PrintMatrix( BUF, M1 );
+  MessageBox( NULL, BUF, " rotate X 30 deg ( M1 )", MB_OK | MB_ICONINFORMATION );
+  M1 = MatrRotateY( 30 );
+  PrintMatrix( BUF, M1 );
+  MessageBox( NULL, BUF, " rotate Y 30 deg ( M1 )", MB_OK | MB_ICONINFORMATION );
+  M1 = MatrRotateZ( 30 );
+  PrintMatrix( BUF, M1 );
+  MessageBox( NULL, BUF, " rotate Z 30 deg ( M1 )", MB_OK | MB_ICONINFORMATION );
 
 }
