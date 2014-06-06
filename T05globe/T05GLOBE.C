@@ -12,31 +12,69 @@
 #define dStepS ((double)(0.10))
 
 
-VOID PaintGlobe( HDC hDCP, POINT O, INT R, INT Seed, DOUBLE a, DOUBLE b, DOUBLE stable)
+VOID PaintGlobe( HDC hDCP, POINT O, INT R, INT Seed, DOUBLE a, DOUBLE b, DOUBLE stable, INT Mode)
 {
   double f, t;
   int R1;
+  POINT pol[4];
   SelectObject( hDCP, GetStockObject( NULL_PEN ) );
   SelectObject( hDCP, GetStockObject( DC_BRUSH ) );
-  SetDCBrushColor( hDCP, RGB( 255, 255, 255 ) );
-  srand(Seed);
-  for(f = 0; f < 2 * PI; f += dStepF)
+  switch(Mode)
   {
-    for(t = 0; t < PI; t += dStepT)
-    {
-       if(R * sin( t ) * cos( f + a ) >= 0)
-       {
-         if (f > stable)
+  case (1):
+    srand(Seed);
+    for(f = 0; f < 2 * PI; f += dStepF)
+      for(t = 0; t < PI; t += dStepT)
+         if(R * sin( t ) * cos( f + a ) >= 0)
          {
-           SetPixel ( hDCP, O.x + R * sin( t ) * sin( f + a ), O.y + R * cos( t ),  RGB( 75 +  rand() % 150, 75 +  rand() % 150, 75 +  rand() % 150 ));
-         }
-         else
-         {
-           R1 = (rand() % 30) * sin(rand());
-           SetPixel ( hDCP, O.x + (R + R1) * sin( t ) * sin( f + a ), O.y + (R + R1) * cos( t ),  RGB( 75 +  rand() % 150, 75 +  rand() % 150, 75 +  rand() % 150 ));
-         }
-       }
-    }
+           if (f > stable)
+           {
+             SetPixel ( hDCP, O.x + R * sin( t ) * sin( f + a ), O.y + R * cos( t ),  RGB( 75 +  rand() % 150, 75 +  rand() % 150, 75 +  rand() % 150 ));
+             rand(), rand();
+           }  
+           else
+           {
+             R1 = (rand() % 30) * sin(rand());
+             SetPixel ( hDCP, O.x + (R + R1) * sin( t ) * sin( f + a ), O.y + (R + R1) * cos( t ),  RGB( 75 +  rand() % 150, 75 +  rand() % 150, 75 +  rand() % 150 ));
+           }
+        }
+        else
+        {
+          rand(), rand(), rand(), rand(), rand();
+        }
+
+    break;
+  case (2):
+    srand(Seed);
+    for(f = 0; f < 2 * PI; f += dStepF)
+      for(t = 0; t < PI; t += dStepT)
+        if(R * sin( t ) * cos( f + a ) >= 0)
+        {
+          if (f > stable)
+          {
+            R1 = 0;
+            rand(), rand();
+          }  
+          else
+          {
+            R1 = (rand() % 30) * sin(rand());
+          }
+          pol[0].x = O.x + (R + R1) * sin( t ) * sin( f + a );
+          pol[0].y = O.y + (R + R1) * cos( t );
+          pol[1].x = O.x + (R + R1) * sin( t + dStepT ) * sin( f + a );
+          pol[1].y = O.y + (R + R1) * cos( t + dStepT );
+          pol[2].x = O.x + (R + R1) * sin( t + dStepT ) * sin( f + dStepF + a );
+          pol[2].y = O.y + (R + R1) * cos( t + dStepT );
+          pol[3].x = O.x + (R + R1) * sin( t ) * sin( f + dStepF + a );
+          pol[3].y = O.y + (R + R1) * cos( t );
+          SetDCBrushColor( hDCP, RGB( 75 +  rand() % 150, 75 +  rand() % 150, 75 +  rand() % 150 ) );
+          Polygon( hDCP, pol, 4);
+        }
+        else
+        {
+          rand(), rand(), rand(), rand(), rand();
+        }
+    break;
   }
 }
 
@@ -77,14 +115,14 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam
   PAINTSTRUCT ps;
   RECT rc;
   CHAR ch;
-  static INT W, H, SM;
+  static INT W, H, SM, Mode = 2;
   static HDC hMemDC, hDCLogo;
   static HBITMAP hBm, hBmLogo;
   static BITMAP BmLogo;
   SYSTEMTIME Time;
   static double Spin, Stable = 0;
   static POINT O;
-  static BOOL NRND = TRUE;
+  static BOOL NRND = TRUE, PAUSE = FALSE;
   switch(Msg)
   {
   case WM_CREATE:
@@ -116,11 +154,18 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam
       FlipFullScreen( hWnd );
     else if (ch == 'r')
       NRND = !NRND;
+    else if (ch == 'p')
+      PAUSE = !PAUSE;
+    else if (ch == '1')
+      Mode = 1;
+    else if (ch == '2')
+      Mode = 2;
     break;
   case WM_TIMER:
     GetLocalTime( &Time );
-    Spin = (double)2 * PI * (Time.wMilliseconds + Time.wSecond * 1000) / 10000.0; 
-    if (NRND && Stable > 0)
+    if (!PAUSE)
+      Spin = (double)2 * PI * (Time.wMilliseconds + Time.wSecond * 1000) / 10000.0; 
+    if (NRND && Stable > -0.001)
       Stable -= dStepS;
     if (!NRND && Stable < 2 * PI)
       Stable += dStepS;
@@ -143,7 +188,7 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam
     SetDCPenColor( hMemDC, RGB( 0, 0, 0 ) );
     SetDCBrushColor( hMemDC, RGB( 0, 0, 0 ) );
     Rectangle( hMemDC, 0, 0, W, H);
-    PaintGlobe( hMemDC, O, SM / 2 - 30, 30, Spin, 0.5, Stable);
+    PaintGlobe( hMemDC, O, SM / 2 - 30, 30, Spin, 0.5, Stable, Mode);
     BitBlt( hDC, 0, 0, W, H, hMemDC, 0, 0, SRCCOPY);
     DeleteDC( hMemDC );
     DeleteDC( hDCLogo );
