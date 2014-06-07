@@ -142,10 +142,11 @@ INT WINAPI WinMain ( HINSTANCE hInstance, HINSTANCE hPrevInstanse, CHAR *CmdLine
   return msg.wParam;
 } */
 
-void PrintMatrix (CHAR *Buf, MATRIX M)
+void PrintMatrix (CHAR *Messege, MATRIX M)
 {
-  sprintf( Buf, " / %6.3lf %6.3lf %6.3lf %6.3lf \\\n |  %6.3lf %6.3lf %6.3lf %6.3lf  |\n|  %6.3lf %6.3lf %6.3lf %6.3lf  |\n\\ %6.3lf %6.3lf %6.3lf %6.3lf /\n", M.A[0][0], M.A[0][1], M.A[0][2], M.A[0][3], M.A[1][0], M.A[1][1], M.A[1][2], M.A[1][3], M.A[2][0], M.A[2][1], M.A[2][2], M.A[2][3], M.A[3][0], M.A[3][1], M.A[3][2], M.A[3][3]);
-
+  char Buf[300];
+  sprintf( Buf, " / %6.3lf %6.3lf %6.3lf %6.3lf \\\n |%6.3lf %6.3lf %6.3lf %6.3lf  |\n|  %6.3lf %6.3lf %6.3lf %6.3lf  |\n\\ %6.3lf %6.3lf %6.3lf %6.3lf /\n", M.A[0][0], M.A[0][1], M.A[0][2], M.A[0][3], M.A[1][0], M.A[1][1], M.A[1][2], M.A[1][3], M.A[2][0], M.A[2][1], M.A[2][2], M.A[2][3], M.A[3][0], M.A[3][1], M.A[3][2], M.A[3][3]);
+  MessageBox( NULL, Buf, Messege, MB_OK | MB_ICONINFORMATION); 
 }
 
 INT WINAPI WinMain ( HINSTANCE hInstance, HINSTANCE hPrevInstanse, CHAR *CmdLine, INT ShowCmd )
@@ -206,4 +207,5 @@ INT WINAPI WinMain ( HINSTANCE hInstance, HINSTANCE hPrevInstanse, CHAR *CmdLine
   M1 = MatrRotateVec( 30, 1, 1, 1 );
   PrintMatrix( BUF, M1 );
   MessageBox( NULL, BUF, " rotate (1,1,1) 30 deg ( M1 )", MB_OK | MB_ICONINFORMATION );*/
+  PrintMatrix( "Ematr", MatrIdenity( ) );
 }
