@@ -136,16 +136,19 @@ __inline MATRIX MatrTranslate( DOUBLE dX, DOUBLE dY, DOUBLE dZ )
 __inline MATRIX MatrRotateX( DOUBLE AngleInDeg )
 {
   MATRIX M = UnitMatrix;
-  FLT cosis, sisis;
   _asm {
     fld  AngleInDeg
     fmul MultiplierDegree2Radian
     fsincos
-    fstp cosis 
-    fstp sisis 
+    fld st(0)
+    fstp qword ptr  M.A + 40 /* 8 * ((1 * 4) + (1)) */
+    fstp qword ptr  M.A + 80 /* 8 * ((2 * 4) + (2)) */
+    fld  st(0)                   
+    fstp qword ptr  M.A + 48 /* 8 * ((1 * 4) + (2)) */
+    fldz       
+    fsubr      
+    fstp qword ptr  M.A + 72 /* 8 * ((2 * 4) + (1)) */
   }
-  M.A[1][1] = cosis, M.A[2][2] = cosis;
-  M.A[1][2] = sisis, M.A[2][1] = -sisis;
   return M;
 }
 
@@ -156,14 +159,14 @@ __inline MATRIX MatrRotateY( DOUBLE AngleInDeg )
     fld  AngleInDeg
     fmul MultiplierDegree2Radian
     fsincos
-    fld  st(0)
-    fstp M.A[0][0] 
-    fstp M.A[2][2] 
-    fld  st(0) 
-    fstp M.A[2][0] 
+    fld st(0)
+    fstp qword ptr  M.A /* 8 * ((0 * 4) + (0)) */
+    fstp qword ptr  M.A + 80 /* 8 * ((2 * 4) + (2)) */
+    fld  st(0)                   
+    fstp qword ptr  M.A + 64 /* 8 * ((2 * 4) + (0)) */
     fldz       
     fsubr      
-    fstp M.A[0][1] 
+    fstp qword ptr  M.A + 16 /* 8 * ((0 * 4) + (2)) */
   }
   return M;
 }
@@ -176,13 +179,13 @@ __inline MATRIX MatrRotateZ( DOUBLE AngleInDeg )
     fmul MultiplierDegree2Radian
     fsincos
     fld  st(0)
-    fstp M.A[0][0] 
-    fstp M.A[1][1] 
+    fstp qword ptr  M.A /* 8 * ((0 * 4) + (0)) */
+    fstp qword ptr  M.A + 40 /* 8 * ((1 * 4) + (1)) */
     fld  st(0) 
-    fstp M.A[0][1] 
+    fstp qword ptr  M.A + 8 /* 8 * ((0 * 4) + (1)) */
     fldz       
     fsubr      
-    fstp M.A[1][0] 
+    fstp qword ptr  M.A + 32 /* 8 * ((1 * 4) + (0)) */
   }
   return M;
 }
@@ -192,7 +195,7 @@ __inline MATRIX MatrRotateVec( DOUBLE AngleInDeg, DOUBLE X, DOUBLE Y, DOUBLE Z )
   DBL a, sinA, cosA, len;
   MATRIX M;
 
-  a = Deg2Rad * (AngleInDeg);
+  a = Deg2Rad * (AngleInDeg) / -2.0;
   __asm {
     fld a
     fsincos

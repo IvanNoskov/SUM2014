@@ -180,7 +180,7 @@ INT WINAPI WinMain ( HINSTANCE hInstance, HINSTANCE hPrevInstanse, CHAR *CmdLine
   M1 = MatrMulMatr( M2, M3 );
   PrintMatrix( BUF, M1 );
   MessageBox( NULL, BUF, " M2 * M3 ( M1 )", MB_OK | MB_ICONINFORMATION );*/
-  M1 = MatrRotateX( 30 );
+/*  M1 = MatrRotateX( 30 );
   PrintMatrix( BUF, M1 );
   MessageBox( NULL, BUF, " rotate X 30 deg ( M1 )", MB_OK | MB_ICONINFORMATION );
   M1 = MatrRotateY( 30 );
@@ -188,6 +188,22 @@ INT WINAPI WinMain ( HINSTANCE hInstance, HINSTANCE hPrevInstanse, CHAR *CmdLine
   MessageBox( NULL, BUF, " rotate Y 30 deg ( M1 )", MB_OK | MB_ICONINFORMATION );
   M1 = MatrRotateZ( 30 );
   PrintMatrix( BUF, M1 );
-  MessageBox( NULL, BUF, " rotate Z 30 deg ( M1 )", MB_OK | MB_ICONINFORMATION );
-
+  MessageBox( NULL, BUF, " rotate Z 30 deg ( M1 )", MB_OK | MB_ICONINFORMATION );*/
+/*  M1 = MatrRotateX( 30 );
+  PrintMatrix( BUF, M1 );
+  MessageBox( NULL, BUF, " rotate X 30 deg ( M1 )", MB_OK | MB_ICONINFORMATION );
+  M1 = MatrRotateVec( 30, 1, 0, 0 );
+  MessageBox( NULL, BUF, " rotate X 30 deg ( M1 )", MB_OK | MB_ICONINFORMATION );
+  M1 = MatrRotateVec( 30, -1, 0, 0 );
+  PrintMatrix( BUF, M1 );
+  MessageBox( NULL, BUF, " rotate X 30 deg ( M1 )", MB_OK | MB_ICONINFORMATION );
+  M1 = MatrRotateVec( 30, 0, 1, 0 );
+  PrintMatrix( BUF, M1 );
+  MessageBox( NULL, BUF, " rotate X 30 deg ( M1 )", MB_OK | MB_ICONINFORMATION );
+  M1 = MatrRotateVec( 30, 0, 0, 1 );
+  PrintMatrix( BUF, M1 );
+  MessageBox( NULL, BUF, " rotate X 30 deg ( M1 )", MB_OK | MB_ICONINFORMATION );
+  M1 = MatrRotateVec( 30, 1, 1, 1 );
+  PrintMatrix( BUF, M1 );
+  MessageBox( NULL, BUF, " rotate (1,1,1) 30 deg ( M1 )", MB_OK | MB_ICONINFORMATION );*/
 }
