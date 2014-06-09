@@ -6,34 +6,51 @@
 
 #include "anim.h"
 
-/*--- Frame Per Second Display unit ---*/
+/*--- INFO Display unit ---*/
 
-/* FPSDisplay unit
+/* INFODisplay unit
  * render function
  * base unit render arguments */
-static VOID FPSDisplayUnitRender( in1UNIT *Unit, in1ANIM *Ani )
+static VOID INFODisplayUnitRender( in1UNIT *Unit, in1ANIM *Ani )
 {
   static CHAR Buf[1000];
 
   SetBkMode(Ani->hDC, TRANSPARENT);
   SetTextColor(Ani->hDC, RGB(255, 255, 155));
   TextOut(Ani->hDC, Ani->W - 100, 0, Buf, sprintf(Buf, "FPS: %.3f", Ani->FPS));
+  SetTextColor(Ani->hDC, RGB(155, 255, 255));
+  TextOut(Ani->hDC, Ani->W - 250, 16, Buf, sprintf(Buf, "X: %.3f, Y: %.3f, Z: %.3f, R: %.3f", Ani->JsX, Ani->JsY, Ani->JsZ, Ani->JsR));
 }
 
-/* Frame Per Second Display unit
+/* INFODisplay unit
+ * Response function
+ * base unit render arguments */
+static VOID INFODisplayUnitResponse( in1UNIT *Unit, in1ANIM *Ani )
+{ 
+  if (Ani->KeysClick[VK_ESCAPE])
+    DestroyWindow( Ani->hWnd );
+  if (Ani->KeysClick['F'])
+    IN1_AnimFlipFullScreen( );
+  if (Ani->KeysClick['P'])
+    IN1_AnimSetPause( !Ani->IsPause );
+}
+
+
+/* INFO Display unit
  * creation function */
-in1UNIT * IN1_FPSDisplayUnitCreate( VOID )
+in1UNIT * IN1_INFODisplayUnitCreate( VOID )
 {
-  /* FPSDisplay unit cpeation pointer */
+  /* INFODisplay unit cpeation pointer */
   in1UNIT *Unit;
 
-  /* getting memory | defolte unit model for FPSDisplay unit */
+  /* getting memory | defolte unit model for INFODisplay unit */
   if ((Unit = IN1_AnimUnitCreate(sizeof(in1UNIT))) == NULL)
-  /* no awailabe memory | FPSDisplay unit model ERROR */
+  /* no awailabe memory | INFODisplay unit model ERROR */
     return NULL;
-  /* FPSDisplay unit buse function initialization */
-  Unit->Render = (VOID *)FPSDisplayUnitRender;
-  /* ready FPSDisplay unit pointer return */
+  /* INFODisplay unit buse function initialization */
+  Unit->Render = (VOID *)INFODisplayUnitRender;
+  Unit->Response = (VOID *)INFODisplayUnitResponse;
+  /* ready INFODisplay unit pointer return */
   return Unit;
 }
 

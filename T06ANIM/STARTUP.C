@@ -39,20 +39,6 @@ LRESULT CALLBACK MainWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lPar
     IN1_AnimRender();
     IN1_AnimCopyFrame();
     return 0;
-  case WM_CHAR:
-    switch ((CHAR)wParam)
-    {
-    case 27:
-      DestroyWindow(hWnd);
-      return 0;
-    case 'f':
-      IN1_AnimFlipFullScreen();
-      return 0;
-    case 'p':
-      IN1_AnimSetPause(pause = !pause);
-      return 0;
-    }
-    return 0;
   case WM_ERASEBKGND:
     return 1;
   case WM_PAINT:
@@ -117,7 +103,8 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
   /*--- adding Units to Animation system  ---*/
   for (i = 0; i < 30 * 30; i++)
     IN1_AnimAddUnit( IN1_CowUnitCreate( ) );
-  IN1_AnimAddUnit( IN1_FPSDisplayUnitCreate( ) );
+  IN1_AnimAddUnit( IN1_CowboyUnitCreate( ) );
+  IN1_AnimAddUnit( IN1_INFODisplayUnitCreate( ) );
   IN1_AnimAddUnit( IN1_LOGOUnitCreate( ) );
 
   /* Message processing */

@@ -36,7 +36,29 @@ typedef struct tagin1ANIM
     IsPause;         /* Pause flag */
 
   /*-- Input district --*/
-  BYTE Keys[256];     /* Keys | Mouse state */
+  /*- keyboard -*/
+  BYTE Keys[256];          /* Keys | Mouse state */
+  BYTE KeysOld[256];       /* Keys | Mouse state */  
+  BYTE KeysClick[256];     /* Keys | Mouse state */  
+  /*- mouse -*/
+  DBL
+    MsWeel,
+    MsDeltaX,
+    MsDeltaY,
+    MsAbsX,
+    MsAbsY;
+  /*- joustic -*/
+  DBL
+    JsX,
+    JsY,
+    JsZ,
+    JsR,
+    JsU;
+  BYTE
+    JsBut[32],
+    JsButOld[32],
+    JsButClick[32],
+    JsPOV;
 } in1ANIM;
 
 /* defolte unit data initialization  */
@@ -83,5 +105,7 @@ VOID IN1_AnimAddUnit( in1UNIT *Unit );
 
 /* Creating Unit function */
 in1UNIT * IN1_AnimUnitCreate( INT Size );
+
+static LRESULT CALLBACK IN1_MouseHook( INT Code, WPARAM wParam, LPARAM lParam );
 
 #endif /* __ANIM_H__ */

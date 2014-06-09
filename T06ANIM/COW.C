@@ -43,8 +43,8 @@ static VOID CowUnitResponse( in1UNIT_COW *Unit, in1ANIM *Ani )
 static VOID CowUnitRender( in1UNIT_COW *Unit, in1ANIM *Ani )
 {
   DBL
-    x = (sin(Ani->Time + Unit->ShiftX) + 1) / 2 * Ani->W,
-    y = (cos(Ani->Time + Unit->ShiftY) + 1) / 2 * Ani->H;
+    x = (Ani->W / 2) + sin(Ani->Time + Unit->ShiftX) * Ani->W * Ani->JsZ,
+    y = (Ani->H / 2) + cos(Ani->Time + Unit->ShiftY) * Ani->H * Ani->JsZ;
 
   if (Unit->Type)
     Rectangle(Ani->hDC, x - 30, y - 30, x + 30, y + 30);
