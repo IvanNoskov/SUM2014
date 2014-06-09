@@ -8,87 +8,14 @@
 
 #define WND_CLASS_NAME "Window Class Name"
 
-/* MainWindowFunc preliminary determination */
-LRESULT CALLBACK MainWindowFunc( HWND hWnd, UINT Msg,
-                                 WPARAM wParam, LPARAM lParam );
-
-/* Starting program pount
- * hInstance - Handle to an instance.
- * hPrevInstance - Handle to an previos instance (don't use, must be NULL).
- * *CmdLine - Comand line
- * ShowCmd window chow flag
+/* Message processing function
+ * hWnd - window descriptor
+ * Msg - messege tipe
+ * wParam - 'word' messege parameter
+ * lParam - 'long' messege parameter
+ * (LRESULT) - ansver to message.
  */
-INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
-                    CHAR *CmdLine, INT ShowCmd )
-{
-  WNDCLASS wc;
-  HWND hWnd;
-  MSG msg;
-  INT i;
-
-  /* Registration */
-  wc.style = CS_HREDRAW | CS_VREDRAW;
-  wc.cbClsExtra = 0; /* additive class bites number */
-  wc.cbWndExtra = 0; /* additive window bites number */
-  wc.hbrBackground = (HBRUSH)COLOR_WINDOW; /* Фоновый цвет - выбранный в системе */
-  wc.hCursor = LoadCursor(NULL, IDC_HAND);
-  wc.hIcon = LoadIcon(NULL, IDI_ERROR);
-  wc.lpszMenuName = NULL;
-  wc.hInstance = hInstance;
-  wc.lpfnWndProc = MainWindowFunc;
-  wc.lpszClassName = WND_CLASS_NAME;
-
-  /* Регистрируем класс */
-  if (!RegisterClass(&wc))
-  {
-    MessageBox(NULL, "Error register window class", "Error", MB_ICONERROR | MB_OK);
-    return 0;
-  }
-
-  /* Создание окна */
-  hWnd = CreateWindow(WND_CLASS_NAME, "First Window Sample",
-    WS_OVERLAPPEDWINDOW,
-    CW_USEDEFAULT, CW_USEDEFAULT, /* Позиция окна (x, y) - по умолчанию */
-    CW_USEDEFAULT, CW_USEDEFAULT, /* Размеры окна (w, h) - по умолчанию */
-    NULL,                         /* Дескриптор родительского окна */
-    NULL,                         /* Дескриптор загруженного меню */
-    hInstance,                    /* Дескриптор приложения */
-    NULL);                        /* Указатель на дополнительные параметры */
-
-  ShowWindow(hWnd, ShowCmd);
-  UpdateWindow(hWnd);
-
-  /*** Добавление объектов ***/
-  for (i = 0; i < 30 * 30; i++)
-    IN1_AnimAddUnit(IN1_CowUnitCreate());
-  IN1_AnimAddUnit(IN1_FPSDisplayUnitCreate());
-
-  /* Запуск цикла обработки сообщений */
-  while (GetMessage(&msg, NULL, 0, 0))
-  {
-    TranslateMessage(&msg);
-    /* Передача сообщений в функцию окна */
-    DispatchMessage(&msg);
-  }
-
-  return msg.wParam;
-} /* End of 'WinMain' function */
-
-/* Функция обработки сообщения окна.
- * АРГУМЕНТЫ:
- *   - дескриптор окна:
- *       HWND hWnd;
- *   - номер сообщения:
- *       UINT Msg;
- *   - параметр сообшения ('word parameter'):
- *       WPARAM wParam;
- *   - параметр сообшения ('long parameter'):
- *       LPARAM lParam;
- * ВОЗВРАЩАЕМОЕ ЗНАЧЕНИЕ:
- *   (LRESULT) - в зависимости от сообщения.
- */
-LRESULT CALLBACK MainWindowFunc( HWND hWnd, UINT Msg,
-                                 WPARAM wParam, LPARAM lParam )
+LRESULT CALLBACK MainWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
 {
   HDC hDC;
   PAINTSTRUCT ps;
@@ -140,6 +67,67 @@ LRESULT CALLBACK MainWindowFunc( HWND hWnd, UINT Msg,
     return 0;
   }
   return DefWindowProc(hWnd, Msg, wParam, lParam);
-} /* End of 'MyWindowFunc' function */
+}
+/* Starting program pount
+ * hInstance - Handle to an instance.
+ * hPrevInstance - Handle to an previos instance (don't use, must be NULL).
+ * *CmdLine - Comand line
+ * ShowCmd window chow flag
+ */
+INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+                    CHAR *CmdLine, INT ShowCmd )
+{
+  WNDCLASS wc;
+  HWND hWnd;
+  MSG msg;
+  INT i;
 
-/* END OF 'STARTUP.C' FILE */
+  /* class initialization */
+  wc.style = CS_HREDRAW | CS_VREDRAW;
+  wc.cbClsExtra = 0; /* additive class bites number */
+  wc.cbWndExtra = 0; /* additive window bites number */
+  wc.hbrBackground = (HBRUSH)COLOR_WINDOW; /* background color */
+  wc.hCursor = LoadCursor(NULL, IDC_HAND);
+  wc.hIcon = LoadIcon(NULL, IDI_ERROR);
+  wc.lpszMenuName = NULL;
+  wc.hInstance = hInstance;
+  wc.lpfnWndProc = MainWindowFunc;
+  wc.lpszClassName = WND_CLASS_NAME;
+
+  /* class Registration */
+  if (!RegisterClass(&wc))
+  {
+    MessageBox(NULL, "Error register window class", "Error", MB_ICONERROR | MB_OK);
+    return 0;
+  }
+
+  /* Window creation */
+  hWnd = CreateWindow(WND_CLASS_NAME, "First Window Sample",
+    WS_OVERLAPPEDWINDOW,
+    CW_USEDEFAULT, CW_USEDEFAULT, /* Window position (Defolte) */
+    CW_USEDEFAULT, CW_USEDEFAULT, /* Window size (Defolte) */
+    NULL,                         /* parent window discriptor */
+    NULL,                         /* menu discriptor */
+    hInstance,                    /* program discriptor */
+    NULL);                        /* pointer to advanset parametres */
+
+  ShowWindow(hWnd, ShowCmd);
+  UpdateWindow(hWnd);
+
+  /*--- adding Units to Animation system  ---*/
+  for (i = 0; i < 30 * 30; i++)
+    IN1_AnimAddUnit( IN1_CowUnitCreate( ) );
+  IN1_AnimAddUnit( IN1_FPSDisplayUnitCreate( ) );
+  IN1_AnimAddUnit( IN1_LOGOUnitCreate( ) );
+
+  /* Message processing */
+  while (GetMessage(&msg, NULL, 0, 0))
+  {
+    TranslateMessage(&msg);
+    /* processing message in our Message processing function */
+    DispatchMessage(&msg);
+  }
+
+  return msg.wParam;
+}
+

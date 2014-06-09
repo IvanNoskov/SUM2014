@@ -14,4 +14,9 @@ in1UNIT * IN1_CowUnitCreate( VOID );
  * creation function */
 in1UNIT * IN1_FPSDisplayUnitCreate( VOID );
 
+/* Frame Per Second Display unit
+ * creation function */
+ in1UNIT * IN1_LOGOUnitCreate( VOID ); 
+
+
 #endif /* __UNITS_H__ */

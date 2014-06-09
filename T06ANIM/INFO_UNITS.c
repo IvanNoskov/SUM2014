@@ -8,7 +8,7 @@
 
 /*--- Frame Per Second Display unit ---*/
 
-/* COW unit
+/* FPSDisplay unit
  * render function
  * base unit render arguments */
 static VOID FPSDisplayUnitRender( in1UNIT *Unit, in1ANIM *Ani )
@@ -17,7 +17,7 @@ static VOID FPSDisplayUnitRender( in1UNIT *Unit, in1ANIM *Ani )
 
   SetBkMode(Ani->hDC, TRANSPARENT);
   SetTextColor(Ani->hDC, RGB(255, 255, 155));
-  TextOut(Ani->hDC, 10, 10, Buf, sprintf(Buf, "FPS: %.3f", Ani->FPS));
+  TextOut(Ani->hDC, Ani->W - 100, 0, Buf, sprintf(Buf, "FPS: %.3f", Ani->FPS));
 }
 
 /* Frame Per Second Display unit
@@ -48,36 +48,41 @@ in1UNIT * IN1_FPSDisplayUnitCreate( VOID )
 typedef struct tagin1UNIT_LOGO
 {
   IN1_UNIT_BASE_FIELDS; /* base anim unit data */
-  IMAGE XOR_mask, AND_mask;   /* move */
-  INT X, Y;             /* Tipe of cow */
+  in1IMAGE XOR_mask, AND_mask;   /* picture masks */
 } in1UNIT_LOGO;
 
 /* LOGO unit
  * initialization function
  * base unit initialization arguments */
-static VOID LOGOUnitInit( in1UNIT *Unit, in1ANIM *Ani )
+static VOID LOGOUnitInit( in1UNIT_LOGO *Unit, in1ANIM *Ani )
 {
+  IN1_ImageLoad ( &(Unit->AND_mask), "AND_mask.bmp" );
+  IN1_ImageLoad ( &(Unit->XOR_mask), "XOR_mask.bmp" );
 }
 
 /* LOGO unit
  * deinitialization function
  * base unit deinitialization arguments */
-static VOID LOGOUnitClose( in1UNIT *Unit, in1ANIM *Ani )
+static VOID LOGOUnitClose( in1UNIT_LOGO *Unit, in1ANIM *Ani )
 {
+  IN1_ImageFree ( &(Unit->AND_mask) );
+  IN1_ImageFree ( &(Unit->XOR_mask) );
 }
 
 /* LOGO unit
  * response function
  * base unit response arguments */
-static VOID LOGOUnitResponse( in1UNIT *Unit, in1ANIM *Ani )
+static VOID LOGOUnitResponse( in1UNIT_LOGO *Unit, in1ANIM *Ani )
 {
 } 
 
 /* LOGO unit
  * render function
  * base unit render arguments */
-static VOID LOGOUnitRender( in1UNIT *Unit, in1ANIM *Ani )
+static VOID LOGOUnitRender( in1UNIT_LOGO *Unit, in1ANIM *Ani )
 {
+  IN1_ImagePaint( Ani->hDC, Ani->W - Unit -> AND_mask.W, 10, &(Unit->AND_mask), SRCAND);
+  IN1_ImagePaint( Ani->hDC, Ani->W - Unit -> XOR_mask.W, 10, &(Unit->XOR_mask), SRCINVERT);
 } 
 
 /* LOGO unit
@@ -85,7 +90,7 @@ static VOID LOGOUnitRender( in1UNIT *Unit, in1ANIM *Ani )
  * set defolte unit data to defolte ( void ) unit functions
  * Size - Size of generating unit tipe
  */
-in1UNIT * LOGOUnitCreate( INT Size )
+in1UNIT * IN1_LOGOUnitCreate( VOID )
 {
   /* LOGO unit cpeation pointer */
   in1UNIT_LOGO *Unit;

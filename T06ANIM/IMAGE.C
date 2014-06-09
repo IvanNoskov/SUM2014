@@ -3,16 +3,11 @@
 
 #include "image.h"
 
-/* Функция загрузки изображения.
- * АРГУМЕНТЫ:
- *   - указатель на обрабатываемую картинку:
- *       IMAGE *Img;
- *   - имя загружаемого файла:
- *       HDC hDC;
- * ВОЗВРАЩАЕМОЕ ЗНАЧЕНИЕ:
- *   (BOOL) результат загрузки (TRUE - успешно).
+/* Image loading function
+ * *Img - pointer to IMAGE struct
+ * *Filename - input file name
  */
-BOOL ImageLoad( IMAGE *Img, CHAR *FileName )
+BOOL IN1_ImageLoad( in1IMAGE *Img, CHAR *FileName )
 {
   HBITMAP hBmLoad;
 
@@ -61,15 +56,12 @@ BOOL ImageLoad( IMAGE *Img, CHAR *FileName )
   }
 
   return Img->hBm != NULL;
-} /* End of 'ImageLoad' function */
+}
 
-/* Функция освобождения памяти из-под изображения.
- * АРГУМЕНТЫ:
- *   - указатель на обрабатываемую картинку:
- *       IMAGE *Img;
- * ВОЗВРАЩАЕМОЕ ЗНАЧЕНИЕ: Нет.
+/* in1IMAGE free function
+ * *Img - pointer to in1IMAGE struct
  */
-VOID ImageFree( IMAGE *Img )
+VOID IN1_ImageFree( in1IMAGE *Img )
 {
   if (Img == NULL)
     return;
@@ -78,18 +70,13 @@ VOID ImageFree( IMAGE *Img )
   Img->W = Img->H = 0;
   Img->hBm = NULL;
   Img->Bits = NULL;
-} /* End of 'ImageFree' function */
+}
 
-/* Функция получения цвета точки изображения.
- * АРГУМЕНТЫ:
- *   - указатель на обрабатываемую картинку:
- *       IMAGE *Img;
- *   - координаты получаемой точки:
- *       INT X, Y;
- * ВОЗВРАЩАЕМОЕ ЗНАЧЕНИЕ:
- *   (DWORD) цвет получаемой точки.
+/* picsel color getting function.
+ * *Img - pointer to in1IMAGE struct
+ * X, Y - picsel coordinates
  */
-DWORD ImageGetP( IMAGE *Img, INT X, INT Y )
+DWORD IN1_ImageGetP( in1IMAGE *Img, INT X, INT Y )
 {
   if (Img == NULL)
     return 0;
@@ -103,10 +90,20 @@ DWORD ImageGetP( IMAGE *Img, INT X, INT Y )
     b = color & 0xFF;
     g = (color >> 8) & 0xFF;
     r = (color >> 16) & 0xFF;
-
+    /*return RBG color*/
     return RGB(r, g, b);
   }
   return 0;
-} /* End of 'ImageGetP' function */
+} 
 
-/* END OF 'IMAGE.C' FILE */
+void IN1_ImagePaint ( HDC putPaintPlase, INT X, INT Y, in1IMAGE * Img, INT PaintMode)
+{     
+  HDC hDCLogo;
+
+  if (Img == NULL)
+    return;
+  hDCLogo = CreateCompatibleDC( putPaintPlase );
+  SelectObject ( hDCLogo, Img->hBm );
+  BitBlt( putPaintPlase, X, Y, Img->W, Img->H, hDCLogo, 0, 0, PaintMode); 
+  DeleteDC ( hDCLogo );
+}

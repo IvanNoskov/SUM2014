@@ -6,21 +6,23 @@
 #include "def.h"
 
 /* Image data tipe */
-typedef struct tagIMAGE
+typedef struct tagin1IMAGE
 {
   INT W, H;    /* Size of image */
   HBITMAP hBm; /* image Handle */
   DWORD *Bits; /* inage Data (Bif format) */
-} IMAGE;
+} in1IMAGE;
 
 /* Image Load function */
-BOOL ImageLoad( IMAGE *Img, CHAR *FileName );
+BOOL IN1_ImageLoad( in1IMAGE *Img, CHAR *FileName );
 
 /* Image Freee function */
-VOID ImageFree( IMAGE *Img );
+VOID IN1_ImageFree( in1IMAGE *Img );
 
 /* Picsel Color getting function */
-DWORD ImageGetP( IMAGE *Img, INT X, INT Y );
+DWORD IN1_ImageGetP( in1IMAGE *Img, INT X, INT Y );
+
+void IN1_ImagePaint ( HDC putPaintPlase, INT X, INT Y, in1IMAGE * Img, INT PaintMode);
 
 #endif /* __IMAGE_H__ */
 
