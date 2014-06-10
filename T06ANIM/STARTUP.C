@@ -102,8 +102,7 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
   /*--- adding Units to Animation system  ---*/
   for (i = 0; i < 30 * 30; i++)
-    IN1_AnimAddUnit( IN1_CowUnitCreate( ) );
-  IN1_AnimAddUnit( IN1_CowboyUnitCreate( ) );
+    IN1_AnimAddUnit( IN1_CUBEUnitCreate( ) );
   IN1_AnimAddUnit( IN1_INFODisplayUnitCreate( ) );
   IN1_AnimAddUnit( IN1_LOGOUnitCreate( ) );
 

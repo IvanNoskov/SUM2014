@@ -5,6 +5,8 @@
 #include <time.h>
 
 #include "anim.h"
+#include "render.h"
+
 #include <mmsystem.h>
 
 #pragma comment(lib, "winmm")
@@ -64,6 +66,8 @@ VOID IN1_AnimInit( HWND hWnd )
   TimeStart = TimeOld = TimeFPS = li.QuadPart;
   TimePause = 0;
   FrameCounter = 0;
+  LookAt( VecSet( 0, 0, 0),  VecSet( 1, 0, 0),  VecSet( 0, 1, 0) );
+  SetProj( 6, 6, 0);
 }
 
 /* Animation Deinitialization function
@@ -101,6 +105,7 @@ VOID IN1_AnimResize( INT W, INT H )
   /* Сохранение размера */
   IN1_Anim.W = W;
   IN1_Anim.H = H;
+  ScreenOpt( H, W );
 
   ReleaseDC(IN1_Anim.hWnd, hDC);
 } 
@@ -147,20 +152,6 @@ VOID IN1_AnimRender( VOID )
   SelectObject(IN1_Anim.hDC, GetStockObject(NULL_PEN));
   SetDCBrushColor(IN1_Anim.hDC, RGB(0, 110, 0));
   Rectangle(IN1_Anim.hDC, 0, 0, IN1_Anim.W, IN1_Anim.H);
-
-  /* animation units response */
-  for (i = 0; i < IN1_Anim.NumOfUnits; i++)
-    IN1_Anim.Units[i]->Response(IN1_Anim.Units[i], &IN1_Anim);
-
-  /* animation units rendering */
-  for (i = 0; i < IN1_Anim.NumOfUnits; i++)
-  {
-    SelectObject(IN1_Anim.hDC, GetStockObject(DC_BRUSH));
-    SelectObject(IN1_Anim.hDC, GetStockObject(DC_PEN));
-    SetDCBrushColor(IN1_Anim.hDC, RGB(0, 0, 0));
-    SetDCPenColor(IN1_Anim.hDC, RGB(55, 155, 255));
-    IN1_Anim.Units[i]->Render(IN1_Anim.Units[i], &IN1_Anim);
-  }
 
   /* Frame counting */
   FrameCounter++;
@@ -235,6 +226,21 @@ VOID IN1_AnimRender( VOID )
       }
     }
   }
+  CameraRefresh( );
+  /* animation units response */
+  for (i = 0; i < IN1_Anim.NumOfUnits; i++)
+    IN1_Anim.Units[i]->Response(IN1_Anim.Units[i], &IN1_Anim);
+
+  /* animation units rendering */
+  for (i = 0; i < IN1_Anim.NumOfUnits; i++)
+  {
+    SelectObject(IN1_Anim.hDC, GetStockObject(DC_BRUSH));
+    SelectObject(IN1_Anim.hDC, GetStockObject(DC_PEN));
+    SetDCBrushColor(IN1_Anim.hDC, RGB(0, 0, 0));
+    SetDCPenColor(IN1_Anim.hDC, RGB(55, 155, 255));
+    IN1_Anim.Units[i]->Render(IN1_Anim.Units[i], &IN1_Anim);
+  }
+
 
 } 
 

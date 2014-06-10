@@ -20,5 +20,7 @@ in1UNIT * IN1_INFODisplayUnitCreate( VOID );
 
  in1UNIT * IN1_CowboyUnitCreate( VOID );
 
+ in1UNIT * IN1_CUBEUnitCreate( VOID );
+
 
 #endif /* __UNITS_H__ */
