@@ -150,7 +150,7 @@ VOID IN1_AnimRender( VOID )
   /* Fone cleaning */
   SelectObject(IN1_Anim.hDC, GetStockObject(DC_BRUSH));
   SelectObject(IN1_Anim.hDC, GetStockObject(NULL_PEN));
-  SetDCBrushColor(IN1_Anim.hDC, RGB(0, 110, 0));
+  SetDCBrushColor(IN1_Anim.hDC, RGB(0, 0, 0));
   Rectangle(IN1_Anim.hDC, 0, 0, IN1_Anim.W, IN1_Anim.H);
 
   /* Frame counting */

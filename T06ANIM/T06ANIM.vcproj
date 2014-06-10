@@ -237,6 +237,10 @@
 					RelativePath=".\INFO_UNITS.c"
 					>
 				</File>
+				<File
+					RelativePath=".\something.c"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter

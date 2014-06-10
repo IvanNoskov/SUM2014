@@ -101,8 +101,9 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
   UpdateWindow(hWnd);
 
   /*--- adding Units to Animation system  ---*/
-  for (i = 0; i < 30 * 30; i++)
+  for (i = 0; i < 0 /*30 * 30*/; i++)
     IN1_AnimAddUnit( IN1_CUBEUnitCreate( ) );
+  IN1_AnimAddUnit( IN1_SMTHUnitCreate( 1 ) );
   IN1_AnimAddUnit( IN1_INFODisplayUnitCreate( ) );
   IN1_AnimAddUnit( IN1_LOGOUnitCreate( ) );
 
