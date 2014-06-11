@@ -60,7 +60,7 @@ POINT IN1_WorldToScreen( VEC Point )
   VEC T = PointTransformer( Point, MWorldToScreen );
   POINT A;
   A.x = ( T.X + 1 / 2.0) * (Wscreen - 1);
-  A.y = (-T.Y + 1 / 2.0) * (Hscreen - 1);
+  A.y = (-T.Y + 1 / 2.0) * (Wscreen - 1);
   return A;
 }
 
