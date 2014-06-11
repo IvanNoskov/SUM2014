@@ -66,8 +66,8 @@ VOID IN1_AnimInit( HWND hWnd )
   TimeStart = TimeOld = TimeFPS = li.QuadPart;
   TimePause = 0;
   FrameCounter = 0;
-  LookAt( VecSet( 0, 0, 0),  VecSet( 1, 0, 0),  VecSet( 0, 1, 0) );
-  SetProj( 6, 6, 0);
+  LookAt( VecSet( 2, 0, 0),  VecSet( 0, 0, 0),  VecSet( 0, 1, 0) );
+  SetProj( 6, 6, 2, 30);
 }
 
 /* Animation Deinitialization function
@@ -226,7 +226,9 @@ VOID IN1_AnimRender( VOID )
       }
     }
   }
-  CameraRefresh( );
+
+  CameraRefresh( IN1_Anim.GlobalDeltaTime, IN1_Anim.JsR , IN1_Anim.JsY, IN1_Anim.JsX ,IN1_Anim.JsPOV );
+
   /* animation units response */
   for (i = 0; i < IN1_Anim.NumOfUnits; i++)
     IN1_Anim.Units[i]->Response(IN1_Anim.Units[i], &IN1_Anim);

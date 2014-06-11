@@ -19,7 +19,7 @@ static VOID INFODisplayUnitRender( in1UNIT *Unit, in1ANIM *Ani )
   SetTextColor(Ani->hDC, RGB(255, 255, 155));
   TextOut(Ani->hDC, Ani->W - 100, 0, Buf, sprintf(Buf, "FPS: %.3f", Ani->FPS));
   SetTextColor(Ani->hDC, RGB(155, 255, 255));
-  TextOut(Ani->hDC, Ani->W - 250, 16, Buf, sprintf(Buf, "X: %.3f, Y: %.3f, Z: %.3f, R: %.3f", Ani->JsX, Ani->JsY, Ani->JsZ, Ani->JsR));
+  TextOut(Ani->hDC, Ani->W - 300, 16, Buf, sprintf(Buf, "X: %.3f, Y: %.3f, Z: %.3f, R: %.3f, POV%i", Ani->JsX, Ani->JsY, Ani->JsZ, Ani->JsR, Ani->JsPOV));
 }
 
 /* INFODisplay unit
