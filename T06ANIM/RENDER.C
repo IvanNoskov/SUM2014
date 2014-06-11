@@ -37,13 +37,13 @@ void CameraRefresh ( DBL DTime, DBL DirRotation, DBL UpRotation, DBL RightRotati
   R = MatrMulMatr( MatrMulMatr( MatrRotateVec( DTime * DirRotation * 30, IN1_CAM.Dir.X,  IN1_CAM.Dir.Y,  IN1_CAM.Dir.Z ), MatrRotateVec( DTime * UpRotation * 30, IN1_CAM.Right.X,  IN1_CAM.Right.Y,  IN1_CAM.Right.Z ) ), MatrRotateVec( DTime * RightRotation * 30, IN1_CAM.Up.X,  IN1_CAM.Up.Y,  IN1_CAM.Up.Z ) );
   M = VecSet( 0, 0, 0 );
   if (MOVE_V == 1 || MOVE_V == 2 || MOVE_V == 8)
-    M = VecAddVec( M, VecMulNum ( IN1_CAM.Dir, 0.03 ) );
+    M = VecAddVec( M, VecMulNum ( IN1_CAM.Dir, DTime ) );
   if (MOVE_V == 4 || MOVE_V == 5 || MOVE_V == 6)
-    M = VecAddVec( M, VecMulNum ( IN1_CAM.Dir, -0.03 ) );
+    M = VecAddVec( M, VecMulNum ( IN1_CAM.Dir, -DTime ) );
   if (MOVE_V == 2 || MOVE_V == 3 || MOVE_V == 4)
-    M = VecAddVec( M, VecMulNum ( IN1_CAM.Right, 0.03 ) );  
+    M = VecAddVec( M, VecMulNum ( IN1_CAM.Right, DTime ) );  
   if (MOVE_V == 6 || MOVE_V == 7 || MOVE_V == 8)
-    M = VecAddVec( M, VecMulNum ( IN1_CAM.Right, -0.03 ) );  
+    M = VecAddVec( M, VecMulNum ( IN1_CAM.Right, -DTime ) );  
   IN1_CAM.Dir = VectorTransformer( IN1_CAM.Dir, R);
   IN1_CAM.Right = VectorTransformer( IN1_CAM.Right, R);
   IN1_CAM.Up = VectorTransformer( IN1_CAM.Up, R);
