@@ -5,6 +5,7 @@
 #define __ANIM_H__
 
 #include "image.h"
+#include "render.h"
 
 /* MAX avalable animation units number */
 #define IN1_MAX_UNITS 3000
@@ -63,11 +64,15 @@ typedef struct tagin1ANIM
   DBL
     PrjH,
     PrjW,
-    PrjDist;
+    PrjDist,
+    PrjFar,
+    PrjSize;
   MATRIX
     PrjMWorld,
     PrjMView,
     PrjMProjection;
+  in1CAMERA
+    Eye;
 } in1ANIM;
 
 /* defolte unit data initialization  */

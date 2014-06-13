@@ -86,12 +86,21 @@ BOOL IN1_AnimInit( HWND hWnd )
 
   IN1_hMouseHook = SetWindowsHookEx(WH_MOUSE_LL, IN1_MouseHook, GetModuleHandle(NULL), 0);
   
+
+  IN1_Anim.PrjMWorld = MatrIdenity( );
+
+  IN1_Anim.Eye.Dir = VecNormalize( VecSet( -1, -1, -1 ) );
+  IN1_Anim.Eye.Loc = VecSet( 10, 10, 10 );
+  IN1_Anim.Eye.Right = VecNormalize( VecCrossVec( IN1_Anim.Eye.Dir, VecSet( 0, 1, 0 ) ) );
+  IN1_Anim.Eye.Up = VecCrossVec( IN1_Anim.Eye.Right, IN1_Anim.Eye.Dir );
+  IN1_Anim.PrjMView = MatrLookAt( IN1_Anim.Eye.Loc, VecAddVec( IN1_Anim.Eye.Loc, IN1_Anim.Eye.Dir), IN1_Anim.Eye.Up );
+
   IN1_Anim.PrjH = 3;
   IN1_Anim.PrjW = 4;
   IN1_Anim.PrjDist = 1;
-  IN1_Anim.PrjMWorld = MatrIdenity( );
-  IN1_Anim.PrjMView = MatrLookAt( VecSet( 10, 10, 10 ), VecSet(0, 0, 0), VecSet(0, 1, 0) );
-  IN1_Anim.PrjMProjection = MatrProjection( -IN1_Anim.PrjH / 2, IN1_Anim.PrjH / 2, -IN1_Anim.PrjW / 2, IN1_Anim.PrjH / 2, IN1_Anim.PrjDist, 1000);
+  IN1_Anim.PrjFar = 1000;
+  IN1_Anim.PrjSize = 1;
+  IN1_Anim.PrjMProjection = MatrProjection( -IN1_Anim.PrjW / 2, IN1_Anim.PrjW / 2, -IN1_Anim.PrjH / 2, IN1_Anim.PrjH / 2, IN1_Anim.PrjDist, IN1_Anim.PrjFar);
 
   return TRUE;
 }
@@ -134,9 +143,9 @@ VOID IN1_AnimResize( INT W, INT H )
     ratio_W = (DBL)W / H;
   else
     ratio_H = (DBL)H / W;
-  IN1_Anim.PrjH = size * ratio_H;
-  IN1_Anim.PrjW = size * ratio_W;
-  IN1_Anim.PrjMProjection = MatrProjection( -IN1_Anim.PrjH / 2, IN1_Anim.PrjH / 2, -IN1_Anim.PrjW / 2, IN1_Anim.PrjH / 2, IN1_Anim.PrjDist, 1000);
+  IN1_Anim.PrjH = IN1_Anim.PrjSize * ratio_H;
+  IN1_Anim.PrjW = IN1_Anim.PrjSize * ratio_W;
+  IN1_Anim.PrjMProjection = MatrProjection( -IN1_Anim.PrjW / 2, IN1_Anim.PrjW / 2, -IN1_Anim.PrjH / 2, IN1_Anim.PrjH / 2, IN1_Anim.PrjDist, IN1_Anim.PrjFar);
 } 
 
 /* animation Farme Rendering function
@@ -246,6 +255,9 @@ VOID IN1_AnimRender( VOID )
       }
     }
   }
+
+  /* Camera proccessing */
+  IN1_Anim.PrjMView = MatrLookAt( IN1_Anim.Eye.Loc, VecAddVec( IN1_Anim.Eye.Loc, IN1_Anim.Eye.Dir), IN1_Anim.Eye.Up );
 
   /* Background cleaning */
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

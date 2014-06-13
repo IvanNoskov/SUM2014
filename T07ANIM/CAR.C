@@ -44,8 +44,12 @@ static VOID CARUnitResponse( in1UNIT_CAR *Unit, in1ANIM *Ani )
 static VOID CARUnitRender( in1UNIT_CAR *Unit, in1ANIM *Ani )
 {
   INT I;
-  MATRIX M = MatrMulMatr( MatrTranslate( -5, -5, -0 ), MatrRotateY( Ani->Time * -90 ) );
+  MATRIX M = MatrMulMatr( MatrTranslate( -3, -3, -0 ), MatrRotateY( Ani->Time * -90 ) );
   IN1_RndGObjDraw( &Unit->Smf, Ani->hDC, MatrMulMatr( MatrMulMatr( Ani->PrjMWorld, Ani->PrjMView ), Ani->PrjMProjection ) );
+  IN1_RndGObjDraw( &Unit->Smf, Ani->hDC,MatrMulMatr( M, MatrMulMatr( MatrMulMatr( Ani->PrjMWorld, Ani->PrjMView ), Ani->PrjMProjection ) ) );
+  M = MatrMulMatr( M, M );
+  IN1_RndGObjDraw( &Unit->Smf, Ani->hDC,MatrMulMatr( M, MatrMulMatr( MatrMulMatr( Ani->PrjMWorld, Ani->PrjMView ), Ani->PrjMProjection ) ) );
+  M = MatrMulMatr( M, M );
   IN1_RndGObjDraw( &Unit->Smf, Ani->hDC,MatrMulMatr( M, MatrMulMatr( MatrMulMatr( Ani->PrjMWorld, Ani->PrjMView ), Ani->PrjMProjection ) ) );
 }
 

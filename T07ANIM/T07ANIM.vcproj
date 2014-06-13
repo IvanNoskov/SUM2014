@@ -230,6 +230,10 @@
 				Name="Units"
 				>
 				<File
+					RelativePath=".\CAMERA.C"
+					>
+				</File>
+				<File
 					RelativePath=".\CAR.C"
 					>
 				</File>
