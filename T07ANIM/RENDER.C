@@ -70,7 +70,7 @@ VOID IN1_RndGObjFree( in1GOBJ *GObj )
   memset(GObj, 0, sizeof(in1GOBJ));
 } 
 
-VOID IN1_RndGObjDraw( in1GOBJ *GObj, HDC hDC, MATRIX TransformM )
+VOID IN1_RndGObjDraw( in1GOBJ *GObj, HDC hDC, MATRIXd TransformM )
 {
   INT i, j, n[3];
   POINT *pts;
@@ -80,8 +80,8 @@ VOID IN1_RndGObjDraw( in1GOBJ *GObj, HDC hDC, MATRIX TransformM )
 
   glLoadMatrixd( &(TransformM.A[0][0]) );
 
-  glPolygonMode( GL_BACK, GL_POINT );
-  glPolygonMode( GL_FRONT, GL_LINE );
+  glPolygonMode( GL_BACK, GL_LINE );
+  glPolygonMode( GL_FRONT, GL_FILL );
   glBegin( GL_TRIANGLES );
   for (i = 0; i < GObj->NumOfF; i++)
   {

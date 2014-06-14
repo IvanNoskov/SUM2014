@@ -27,7 +27,7 @@ static VOID CAMERAUnitClose( in1UNIT_CAMERA *Unit, in1ANIM *Ani )
  * base unit response arguments */
 static VOID CAMERAUnitResponse( in1UNIT_CAMERA *Unit, in1ANIM *Ani )
 {
-  MATRIX R;
+  MATRIXd R;
   VEC M;
   if(Ani->KeysClick['C'])
     Unit->MODE = (Unit->MODE + 1) % 2;

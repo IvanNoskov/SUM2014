@@ -67,7 +67,7 @@ typedef struct tagin1ANIM
     PrjDist,
     PrjFar,
     PrjSize;
-  MATRIX
+  MATRIXd
     PrjMWorld,
     PrjMView,
     PrjMProjection;

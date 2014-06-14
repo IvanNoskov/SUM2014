@@ -279,6 +279,7 @@ VOID IN1_AnimRender( VOID )
   /* animation units rendering */
   for (i = 0; i < IN1_Anim.NumOfUnits; i++)
   {
+    glDepthMask(1);
     IN1_Anim.Units[i]->Render(IN1_Anim.Units[i], &IN1_Anim);
   }
   

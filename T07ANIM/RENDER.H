@@ -24,7 +24,7 @@ BOOL IN1_RndGObjLoad( in1GOBJ *GObj, CHAR *FileName );
 VOID IN1_RndGObjFree( in1GOBJ *GObj );
 
 /* Функция отрисовки геометрического объекта */
-VOID IN1_RndGObjDraw( in1GOBJ *GObj, HDC hDC, MATRIX TransformM );
+VOID IN1_RndGObjDraw( in1GOBJ *GObj, HDC hDC, MATRIXd TransformM );
 
 
 #endif /* __RENDER_H__ */

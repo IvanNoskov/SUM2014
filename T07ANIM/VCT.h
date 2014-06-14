@@ -19,12 +19,17 @@ typedef struct tagVEC{
   DOUBLE X, Y, Z;
 } VEC;
 
-typedef struct tagMATRIX
+typedef struct tagMATRIXd
 {
-  DOUBLE A[4][4];
-} MATRIX;
+  DBL A[4][4];
+} MATRIXd;
 
-extern MATRIX UnitMatrix;
+typedef struct tagMATRIXf
+{
+  FLT A[4][4];
+} MATRIXf;
+
+extern MATRIXd UnitMatrix;
 extern long double MultiplierDegree2Radian;
 extern INT iscl[4][3];
 
@@ -89,12 +94,12 @@ __inline VEC VecNormalize ( VEC A )
   return VecDivNum( A, VecLen( A ) );
 }
 
-__inline MATRIX MatrSet (DOUBLE A11, DOUBLE A12, DOUBLE A13, DOUBLE A14,
+__inline MATRIXd MatrSet (DOUBLE A11, DOUBLE A12, DOUBLE A13, DOUBLE A14,
                          DOUBLE A21, DOUBLE A22, DOUBLE A23, DOUBLE A24,
                          DOUBLE A31, DOUBLE A32, DOUBLE A33, DOUBLE A34,
                          DOUBLE A41, DOUBLE A42, DOUBLE A43, DOUBLE A44)
 {
-  MATRIX M;
+  MATRIXd M;
   M.A[0][0] = A11;
   M.A[0][1] = A12;
   M.A[0][2] = A13;
@@ -114,32 +119,32 @@ __inline MATRIX MatrSet (DOUBLE A11, DOUBLE A12, DOUBLE A13, DOUBLE A14,
   return M;
 }
 
-__inline MATRIX MatrIdenity()
+__inline MATRIXd MatrIdenity()
 {
   return UnitMatrix;
 }
 
-__inline MATRIX MatrScale( DOUBLE sX, DOUBLE sY, DOUBLE sZ )
+__inline MATRIXd MatrScale( DOUBLE sX, DOUBLE sY, DOUBLE sZ )
 {
-  MATRIX M = UnitMatrix;
+  MATRIXd M = UnitMatrix;
   M.A[0][0] = sX;
   M.A[1][1] = sY;
   M.A[2][2] = sZ;
   return M;
 }
 
-__inline MATRIX MatrTranslate( DOUBLE dX, DOUBLE dY, DOUBLE dZ )
+__inline MATRIXd MatrTranslate( DOUBLE dX, DOUBLE dY, DOUBLE dZ )
 {
-  MATRIX M = UnitMatrix;
+  MATRIXd M = UnitMatrix;
   M.A[3][0] = dX;
   M.A[3][1] = dY;
   M.A[3][2] = dZ;
   return M;
 }
 
-__inline MATRIX MatrRotateX( DOUBLE AngleInDeg )
+__inline MATRIXd MatrRotateX( DOUBLE AngleInDeg )
 {
-  MATRIX M = UnitMatrix;
+  MATRIXd M = UnitMatrix;
   _asm {
     fld  AngleInDeg
     fmul MultiplierDegree2Radian
@@ -156,9 +161,9 @@ __inline MATRIX MatrRotateX( DOUBLE AngleInDeg )
   return M;
 }
 
-__inline MATRIX MatrRotateY( DOUBLE AngleInDeg )
+__inline MATRIXd MatrRotateY( DOUBLE AngleInDeg )
 {
-  MATRIX M = UnitMatrix;
+  MATRIXd M = UnitMatrix;
   _asm {
     fld  AngleInDeg
     fmul MultiplierDegree2Radian
@@ -175,9 +180,9 @@ __inline MATRIX MatrRotateY( DOUBLE AngleInDeg )
   return M;
 }
 
-__inline MATRIX MatrRotateZ( DOUBLE AngleInDeg )
+__inline MATRIXd MatrRotateZ( DOUBLE AngleInDeg )
 {
-  MATRIX M = UnitMatrix;
+  MATRIXd M = UnitMatrix;
   _asm {
     fld  AngleInDeg
     fmul MultiplierDegree2Radian
@@ -194,10 +199,10 @@ __inline MATRIX MatrRotateZ( DOUBLE AngleInDeg )
   return M;
 }
 
-__inline MATRIX MatrRotateVec( DOUBLE AngleInDeg, DOUBLE X, DOUBLE Y, DOUBLE Z )
+__inline MATRIXd MatrRotateVec( DOUBLE AngleInDeg, DOUBLE X, DOUBLE Y, DOUBLE Z )
 {
   DBL a, sinA, cosA, len;
-  MATRIX M;
+  MATRIXd M;
 
   a = Deg2Rad * (AngleInDeg) / -2.0;
   __asm {
@@ -231,9 +236,9 @@ __inline MATRIX MatrRotateVec( DOUBLE AngleInDeg, DOUBLE X, DOUBLE Y, DOUBLE Z )
   return M;
 }
 
-__inline MATRIX MatrMulMatr (MATRIX M1, MATRIX M2)
+__inline MATRIXd MatrMulMatr (MATRIXd M1, MATRIXd M2)
 {
-  MATRIX L;
+  MATRIXd L;
   L.A[0][0] = M1.A[0][0] * M2.A[0][0] + M1.A[0][1] * M2.A[1][0] + M1.A[0][2] * M2.A[2][0] + M1.A[0][3] * M2.A[3][0];
   L.A[0][1] = M1.A[0][0] * M2.A[0][1] + M1.A[0][1] * M2.A[1][1] + M1.A[0][2] * M2.A[2][1] + M1.A[0][3] * M2.A[3][1];
   L.A[0][2] = M1.A[0][0] * M2.A[0][2] + M1.A[0][1] * M2.A[1][2] + M1.A[0][2] * M2.A[2][2] + M1.A[0][3] * M2.A[3][2];
@@ -253,9 +258,9 @@ __inline MATRIX MatrMulMatr (MATRIX M1, MATRIX M2)
   return L;
 }
 
-__inline MATRIX MatrTranspose (MATRIX M)
+__inline MATRIXd MatrTranspose (MATRIXd M)
 {
-  MATRIX L;
+  MATRIXd L;
   L.A[0][0] = M.A[0][0];
   L.A[0][1] = M.A[1][0];
   L.A[0][2] = M.A[2][0];
@@ -275,7 +280,7 @@ __inline MATRIX MatrTranspose (MATRIX M)
   return L;
 }
 
-__inline DOUBLE MatrMathDop (MATRIX M, INT I, INT J)
+__inline DOUBLE MatrMathDop (MATRIXd M, INT I, INT J)
 {
   return (((I + J) % 2) == 0 ? -1 : 1) * (M.A[iscl[I][0]][iscl[J][0]] * M.A[iscl[I][1]][iscl[J][1]] * M.A[iscl[I][2]][iscl[J][2]] + 
                                           M.A[iscl[I][0]][iscl[J][1]] * M.A[iscl[I][1]][iscl[J][2]] * M.A[iscl[I][2]][iscl[J][0]] +
@@ -285,10 +290,10 @@ __inline DOUBLE MatrMathDop (MATRIX M, INT I, INT J)
                                           M.A[iscl[I][0]][iscl[J][1]] * M.A[iscl[I][1]][iscl[J][0]] * M.A[iscl[I][2]][iscl[J][2]]);
 }
 
-__inline MATRIX MatrInverse (MATRIX M)
+__inline MATRIXd MatrInverse (MATRIXd M)
 {
   double Det = M.A[0][0] * MatrMathDop(M, 0, 0) - M.A[0][1] * MatrMathDop(M, 0, 1) + M.A[0][2] * MatrMathDop(M, 0, 2) - M.A[0][3] * MatrMathDop(M, 0, 3);
-  MATRIX L;
+  MATRIXd L;
   L.A[0][0] = MatrMathDop(M, 0, 0) / Det;
   L.A[0][1] = MatrMathDop(M, 1, 0) / Det;
   L.A[0][2] = MatrMathDop(M, 2, 0) / Det;
@@ -308,7 +313,7 @@ __inline MATRIX MatrInverse (MATRIX M)
   return L;
 }
 
-__inline VEC PointTransformer (VEC A, MATRIX M)
+__inline VEC PointTransformer (VEC A, MATRIXd M)
 {
   double W = M.A[0][3] * A.X + M.A[1][3] * A.Y + M.A[2][3] * A.Z + M.A[3][3];
   return VecSet( (M.A[0][0] * A.X + M.A[1][0] * A.Y + M.A[2][0] * A.Z + M.A[3][0]) / W,
@@ -316,17 +321,17 @@ __inline VEC PointTransformer (VEC A, MATRIX M)
                  (M.A[0][2] * A.X + M.A[1][2] * A.Y + M.A[2][2] * A.Z + M.A[3][2]) / W);
 }
 
-__inline VEC VectorTransformer (VEC A, MATRIX M)
+__inline VEC VectorTransformer (VEC A, MATRIXd M)
 {
   return VecSet( (M.A[0][0] * A.X + M.A[1][0] * A.Y + M.A[2][0] * A.Z),
                  (M.A[0][1] * A.X + M.A[1][1] * A.Y + M.A[2][1] * A.Z),
                  (M.A[0][2] * A.X + M.A[1][2] * A.Y + M.A[2][2] * A.Z));
 }
 
-__inline MATRIX MatrLookAt (VEC Loc, VEC At, VEC UpApprox)
+__inline MATRIXd MatrLookAt (VEC Loc, VEC At, VEC UpApprox)
 {
   VEC Dir, Up, Right;
-  MATRIX R;
+  MATRIXd R;
   Dir = VecNormalize( VecSubVec( At, Loc ) );
   Right = VecNormalize( VecCrossVec( Dir, UpApprox ) );
   Up = VecCrossVec( Right, Dir );
@@ -349,11 +354,11 @@ __inline MATRIX MatrLookAt (VEC Loc, VEC At, VEC UpApprox)
   return R;
 }
 
-__inline MATRIX MatrProjection( DBL Left, DBL Right,
+__inline MATRIXd MatrProjection( DBL Left, DBL Right,
                                 DBL Bottom, DBL Top,
                                 DBL Near, DBL Far )
 {
-  MATRIX m =
+  MATRIXd m =
   {
     {
       {      2 * Near / (Right - Left),                               0,                              0,  0},
@@ -364,5 +369,27 @@ __inline MATRIX MatrProjection( DBL Left, DBL Right,
   };
   return m;
 } 
+
+__inline MATRIXf ShaderMatrTransfom( MATRIXd Mi )
+{
+  MATRIXf Mo;
+  Mo.A[0][0] = Mi.A[0][0];
+  Mo.A[0][1] = Mi.A[0][1];
+  Mo.A[0][2] = Mi.A[0][2];
+  Mo.A[0][3] = Mi.A[0][3];
+  Mo.A[1][0] = Mi.A[1][0];
+  Mo.A[1][1] = Mi.A[1][1];
+  Mo.A[1][2] = Mi.A[1][2];
+  Mo.A[1][3] = Mi.A[1][3];
+  Mo.A[2][0] = Mi.A[2][0];
+  Mo.A[2][1] = Mi.A[2][1];
+  Mo.A[2][2] = Mi.A[2][2];
+  Mo.A[2][3] = Mi.A[2][3];
+  Mo.A[3][0] = Mi.A[3][0];
+  Mo.A[3][1] = Mi.A[3][1];
+  Mo.A[3][2] = Mi.A[3][2];
+  Mo.A[3][3] = Mi.A[3][3];
+  return Mo;
+}
 
 #endif /* __VCT_H__ */
