@@ -19,6 +19,10 @@ typedef struct tagVEC{
   DOUBLE X, Y, Z;
 } VEC;
 
+typedef struct tagVECf{
+  FLT X, Y, Z;
+} VECf;
+
 typedef struct tagMATRIXd
 {
   DBL A[4][4];
@@ -390,6 +394,24 @@ __inline MATRIXf ShaderMatrTransfom( MATRIXd Mi )
   Mo.A[3][2] = Mi.A[3][2];
   Mo.A[3][3] = Mi.A[3][3];
   return Mo;
+}
+
+__inline VECf ShaderVecTransfrov( VEC A )
+{
+  VECf B;
+  B.X = A.X;
+  B.Y = A.Y;
+  B.Z = A.Z;
+  return B;
+}
+
+__inline VEC VecRedTransfrov( VECf A )
+{
+  VEC B;
+  B.X = A.X;
+  B.Y = A.Y;
+  B.Z = A.Z;
+  return B;
 }
 
 #endif /* __VCT_H__ */

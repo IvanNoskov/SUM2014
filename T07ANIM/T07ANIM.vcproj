@@ -194,6 +194,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\PRIM.C"
+					>
+				</File>
+				<File
 					RelativePath=".\RENDER.C"
 					>
 				</File>
@@ -217,6 +221,14 @@
 					Name="Resourse Handle"
 					>
 					<File
+						RelativePath=".\GEOMHAND.C"
+						>
+					</File>
+					<File
+						RelativePath=".\GEOMLOAD.C"
+						>
+					</File>
+					<File
 						RelativePath=".\IMAGE.C"
 						>
 					</File>
@@ -238,10 +250,6 @@
 					>
 					<File
 						RelativePath=".\CAMERA.C"
-						>
-					</File>
-					<File
-						RelativePath=".\CAR.C"
 						>
 					</File>
 					<File
