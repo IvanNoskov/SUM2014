@@ -13,6 +13,4 @@ in1UNIT * IN1_INFODisplayUnitCreate( VOID );
 in1UNIT * IN1_CAMERAUnitCreate( VOID );
 
 
-in1UNIT * IN1_CARUnitCreate( INT I );
-
 #endif /* __UNITS_H__ */

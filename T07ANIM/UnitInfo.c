@@ -1,4 +1,5 @@
 #include "anim.h"
+#include "stdio.h"
 
 /*--- INFO Display unit ---*/
 

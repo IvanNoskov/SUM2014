@@ -5,6 +5,9 @@
 
 #include "shader.h"
 
+
+UINT IN1_ShaderProg;
+
 /* Text file to memory loading function
  */
 static CHAR *LoadFile( CHAR *FileName )

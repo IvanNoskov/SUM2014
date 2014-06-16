@@ -107,7 +107,7 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
   /*--- adding Units to Animation system  ---*/
   IN1_AnimAddUnit( IN1_INFODisplayUnitCreate( ) );
   IN1_AnimAddUnit( IN1_CAMERAUnitCreate( ) );
-  IN1_AnimAddUnit( IN1_CARUnitCreate( 0 ) );
+/*  IN1_AnimAddUnit( IN1_CARUnitCreate( 0 ) );*/
 
   /* Message processing */
   while (TRUE)

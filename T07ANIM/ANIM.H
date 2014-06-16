@@ -122,4 +122,6 @@ in1UNIT * IN1_AnimUnitCreate( INT Size );
 
 static LRESULT CALLBACK IN1_MouseHook( INT Code, WPARAM wParam, LPARAM lParam );
 
+extern in1ANIM IN1_Anim;
+
 #endif /* __ANIM_H__ */

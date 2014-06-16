@@ -5,6 +5,8 @@
 
 #include "def.h"
 
+extern UINT IN1_ShaderProg;
+
 /* Shder initialisation function */
 UINT IN1_ShadProgInit( CHAR *VSFileName, CHAR *FSFileName );
 

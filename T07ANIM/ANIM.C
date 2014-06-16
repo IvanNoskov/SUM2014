@@ -13,7 +13,7 @@
 #define IN1_AXIS_setting_VALUE(A) ((INT)(IN1_JoyStik_discretization * (1.0 * (Contr1.dw ## A ## pos - Jcaps.w ## A ## min) / (Jcaps.w ## A ## max - Jcaps.w ## A ##min - 1))) / IN1_JoyStik_discretization)
 
 /* Main system Animation system Data */
-static in1ANIM IN1_Anim;
+in1ANIM IN1_Anim;
 
 BYTE
   Keys[256],
