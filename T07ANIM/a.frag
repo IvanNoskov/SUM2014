@@ -4,7 +4,7 @@
  * LAST UPDATE : 13.06.2014
  */
 
-#version 430
+#version 420
 
 /* Выходное значение цвета рисования */
 out vec4 OutColor;
@@ -26,6 +26,8 @@ uniform vec4 UseColor;
 uniform mat4 MatrWVP;
 uniform mat4 MatrWorldInverseTranspose;
 uniform mat4 MatrWorld;
+
+uniform vec3 Eye;
 
 /* Текстура */
 uniform sampler2D DrawTexture;
@@ -49,7 +51,7 @@ vec3 Illum( vec3 N )
   N = faceforward(N, ViewDir, N);
   float nl = dot(N, l);
   if (nl > 0)
-    color += (texc.xyz * 1 + Kd + vec3(0.3, 0.63, 0.3)) * nl;
+    color += (texc.xyz * Kd + vec3(0, 0, 0)) * nl;
 
   vec3 R = reflect(Dir, N);
   R = Dir - N * (2 * dot(Dir, N));
@@ -76,6 +78,7 @@ void main( void )
       t = 0;
     else
       t = 1 - (dist - start) / (end - start);
+  t = 1;
   OutColor = vec4(0.3, 0.5, 0.7, 1) * (1 - t) + vec4(Illum(DrawNormal).xyz, Trans) * t;
 } /* End of 'main' function */
 

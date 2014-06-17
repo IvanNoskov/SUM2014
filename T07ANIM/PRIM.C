@@ -207,8 +207,9 @@ VOID IN1_PrimDraw( in1PRIM *P )
         glVertex3fv(&P->V[start + P->I[j]].P.X);
       glEnd();
       */
-      glDrawElements(GL_TRIANGLE_STRIP, P->NumOfI, GL_UNSIGNED_INT,
-        (VOID *)(i * P->GW * 2 * sizeof(INT)));
+      glDrawElementsBaseVertex(GL_TRIANGLE_STRIP,
+        P->NumOfI, GL_UNSIGNED_INT, (VOID *)0,
+        i * P->GW);
     }
   }
   glUseProgram(0);

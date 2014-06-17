@@ -114,6 +114,7 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
   IN1_AnimAddUnit( IN1_KEYUnitCreate( id++, VecSet( 0, 0, 10 ) ) );
   IN1_AnimAddUnit( IN1_KEYUnitCreate( id++, VecSet( 0, -10, 0 ) ) );
   IN1_AnimAddUnit( IN1_GOSTUnitCreate( id++, 5 ) ); 
+  IN1_AnimAddUnit( IN1_HOUSEUnitCreate( id++ ) ); 
   
 /*  IN1_AnimAddUnit( IN1_CARUnitCreate( 0 ) );*/
 

@@ -27,5 +27,8 @@ typedef struct tagin1UNIT_GOST
 
 in1UNIT * IN1_GOSTUnitCreate( INT ID );
 
+in1UNIT * IN1_HOUSEUnitCreate( INT ID );
+
+
 
 #endif /* __UNITS_H__ */

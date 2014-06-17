@@ -14,6 +14,7 @@ typedef struct tagin1UNIT_KEY
   MATRIXd Rot,          /* Key Rotation matrix        */
           Trans;        /* Key Translation matrix     */
   BOOL isFound;         /* TRUE if key has been found */
+  INT SEED;
 } in1UNIT_KEY;
 
 /* KEY unit
@@ -62,7 +63,9 @@ static VOID KEYUnitRender( in1UNIT_KEY *Unit, in1ANIM *Ani )
 {
   if (Unit->isFound)
     return;
-  Unit->Rot = MatrMulMatr( Unit->Rot, MatrRotateVec( (rand() * 30.0 * 30 / RAND_MAX) * Ani->DeltaTime, tan( rand() ), tan( rand() ), tan( rand() ) ) );
+  srand( Unit->SEED );
+  Unit->SEED = (rand() + rand() - rand()) % RAND_MAX;
+  Unit->Rot = MatrMulMatr( Unit->Rot, MatrRotateVec( (rand() * 2.0 / RAND_MAX) * 360, tan( rand() ), tan( rand() ), tan( rand() ) ) );
   glLoadMatrixd( MatrMulMatr( MatrMulMatr( Unit->Rot, Unit->Trans ), Ani->PrjM_WVP ).A[0] );
   glLineWidth( 3 );
   glUseProgram( 0 );
@@ -133,6 +136,7 @@ in1UNIT * IN1_KEYUnitCreate( INT ID, VEC Position )
   Unit->Rot = MatrIdenity();
   Unit->Trans = MatrTranslate( Position.X, Position.Y, Position.Z );
   Unit->Pos = Position;
+  Unit->SEED = rand() % 30;
   /* ready KEY unit pointer return */
   return (in1UNIT *)Unit;
 } 

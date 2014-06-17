@@ -86,6 +86,8 @@ BOOL IN1_AnimInit( HWND hWnd )
 
   IN1_hMouseHook = SetWindowsHookEx(WH_MOUSE_LL, IN1_MouseHook, GetModuleHandle(NULL), 0);
   
+  glEnable( GL_DEPTH_TEST );
+  glEnable( GL_ALPHA_TEST );
 
   IN1_Anim.PrjMWorld = MatrIdenity( );
 
@@ -101,6 +103,7 @@ BOOL IN1_AnimInit( HWND hWnd )
   IN1_Anim.PrjFar = 1000;
   IN1_Anim.PrjSize = 1;
   IN1_Anim.PrjMProjection = MatrProjection( -IN1_Anim.PrjW / 2, IN1_Anim.PrjW / 2, -IN1_Anim.PrjH / 2, IN1_Anim.PrjH / 2, IN1_Anim.PrjDist, IN1_Anim.PrjFar);
+  IN1_AnimPrjMResponse();
 
   return TRUE;
 }
@@ -121,6 +124,9 @@ VOID IN1_AnimClose( VOID )
   }
 
   wglMakeCurrent(NULL, NULL);
+
+  glDisable( GL_DEPTH_TEST );
+  glDisable( GL_ALPHA_TEST );  
 
   wglDeleteContext(IN1_Anim.hRC);
   ReleaseDC(IN1_Anim.hWnd, IN1_Anim.hDC);
@@ -146,6 +152,7 @@ VOID IN1_AnimResize( INT W, INT H )
   IN1_Anim.PrjH = IN1_Anim.PrjSize * ratio_H;
   IN1_Anim.PrjW = IN1_Anim.PrjSize * ratio_W;
   IN1_Anim.PrjMProjection = MatrProjection( -IN1_Anim.PrjW / 2, IN1_Anim.PrjW / 2, -IN1_Anim.PrjH / 2, IN1_Anim.PrjH / 2, IN1_Anim.PrjDist, IN1_Anim.PrjFar);
+  IN1_AnimPrjMResponse();
 } 
 
 /* animation Farme Rendering function
@@ -258,6 +265,8 @@ VOID IN1_AnimRender( VOID )
 
   /* Camera proccessing */
   IN1_Anim.PrjMView = MatrLookAt( IN1_Anim.Eye.Loc, VecAddVec( IN1_Anim.Eye.Loc, IN1_Anim.Eye.Dir), IN1_Anim.Eye.Up );
+  IN1_AnimPrjMResponse();
+
 
   /* Background cleaning */
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -275,6 +284,10 @@ VOID IN1_AnimRender( VOID )
   /* animation units response */
   for (i = 0; i < IN1_Anim.NumOfUnits; i++)
     IN1_Anim.Units[i]->Response(IN1_Anim.Units[i], &IN1_Anim);
+
+  for (i = 0; i < IN1_Anim.NumOfUnits; i++)
+    IN1_Anim.Units[i]->Collision(IN1_Anim.Units[i], &IN1_Anim);
+
 
   /* animation units rendering */
   for (i = 0; i < IN1_Anim.NumOfUnits; i++)
@@ -294,6 +307,13 @@ VOID IN1_AnimCopyFrame( VOID )
   /* frame Outpute */
   glFinish();
   SwapBuffers( IN1_Anim.hDC );
+}
+
+VOID IN1_AnimPrjMResponse()
+{
+  IN1_Anim.PrjM_VP = MatrMulMatr( IN1_Anim.PrjMView,  IN1_Anim.PrjMProjection );
+  IN1_Anim.PrjM_WV = MatrMulMatr( IN1_Anim.PrjMWorld, IN1_Anim.PrjMView );
+  IN1_Anim.PrjM_WVP = MatrMulMatr( MatrMulMatr( IN1_Anim.PrjMWorld, IN1_Anim.PrjMView ), IN1_Anim.PrjMProjection );
 }
 
 /* Adding Unit to Animation Sistem

@@ -124,6 +124,11 @@ VOID IN1_GeomDraw( in1GEOM *G )
   if (loc != -1)
     glUniform1f(loc, IN1_Anim.Time);
 
+  V = ShaderVecTransfrov(IN1_Anim.Eye.Loc);
+  loc = glGetUniformLocation(IN1_ShaderProg, "Eye");
+  if (loc != -1)
+    glUniform3fv(loc, 1, &V.X);
+
   V = ShaderVecTransfrov(IN1_Anim.Eye.Dir);
   loc = glGetUniformLocation(IN1_ShaderProg, "ViewDir");
   if (loc != -1)
