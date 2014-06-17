@@ -10,6 +10,12 @@
 /* MAX avalable animation units number */
 #define IN1_MAX_UNITS 3000
 
+/* Units Tipe_ID */
+typedef enum tagin1UNIT_TYPE
+{
+  IN1_NOT_SPECIFIED_UNIT = 0, IN1_UNIT_INFO, IN1_UNIT_WARDEN, IN1_UNIT_GOST, IN1_UNIT_EYE, IN1_UNIT_KEY
+} in1UNIT_TYPE;
+
 /* UNIT tipe preliminary determination */
 typedef struct tagin1UNIT in1UNIT;
 
@@ -70,18 +76,24 @@ typedef struct tagin1ANIM
   MATRIXd
     PrjMWorld,
     PrjMView,
-    PrjMProjection;
+    PrjMProjection,
+    PrjM_WV,
+    PrjM_VP,
+    PrjM_WVP;
   in1CAMERA
     Eye;
 } in1ANIM;
 
 /* defolte unit data initialization  */
 #define IN1_UNIT_BASE_FIELDS \
-  INT Size;                                        /* unit Data Tipe Size */    \
-  VOID (*Init)( in1UNIT *Unit, in1ANIM *Ani );     /* pointer to Initialization function */    \
+  INT Size,                                        /* unit Data Tipe Size */                     \
+      ID;                                          /* curent Unit Identificator */               \
+  in1UNIT_TYPE TipeID;                             /* curent unit Tipe Identificator*/           \
+  VOID (*Init)( in1UNIT *Unit, in1ANIM *Ani );     /* pointer to Initialization function */      \
   VOID (*Close)( in1UNIT *Unit, in1ANIM *Ani );    /* pointer to Deinitialization function */    \
-  VOID (*Response)( in1UNIT *Unit, in1ANIM *Ani ); /* pointer to Response function */    \
-  VOID (*Render)( in1UNIT *Unit, in1ANIM *Ani )    /* pointer to Render function */
+  VOID (*Response)( in1UNIT *Unit, in1ANIM *Ani ); /* pointer to Response function */            \
+  VOID (*Render)( in1UNIT *Unit, in1ANIM *Ani );   /* pointer to Render function */              \
+  VOID (*Collision)( in1UNIT *Unit, in1ANIM *Ani ) /* pointer to Collision function */          
 
 /* defolte( void ) animation unit data tipe */
 struct tagin1UNIT
@@ -90,6 +102,8 @@ struct tagin1UNIT
 };
 
 /*--- Animation control Functions ---*/
+
+VOID IN1_AnimPrjMResponse();
 
 /* Animation Initialization function */
 BOOL IN1_AnimInit( HWND hWnd );

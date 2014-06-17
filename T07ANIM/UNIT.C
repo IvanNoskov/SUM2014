@@ -33,6 +33,13 @@ static VOID IN1_AnimUnitResponse( in1UNIT *Unit, in1ANIM *Ani )
 } 
 
 /* defolte ( void ) unit
+ * Collosion function
+ * base unit initialization arguments */
+static VOID IN1_AnimUnitCollision( in1UNIT *Unit, in1ANIM *Ani )
+{
+}
+
+/* defolte ( void ) unit
  * render function
  * base unit render arguments */
 static VOID IN1_AnimUnitRender( in1UNIT *Unit, in1ANIM *Ani )
@@ -57,9 +64,12 @@ in1UNIT * IN1_AnimUnitCreate( INT Size )
   memset(Unit, 0, Size);
   /* unit buse defolt function initialization */
   Unit->Size = Size;
+  Unit->ID = -1;
+  Unit->TipeID = IN1_NOT_SPECIFIED_UNIT;
   Unit->Init = IN1_AnimUnitInit;
   Unit->Close = IN1_AnimUnitClose;
   Unit->Response = IN1_AnimUnitResponse;
   Unit->Render = IN1_AnimUnitRender;
+  Unit->Collision = IN1_AnimUnitCollision;
   return Unit;
 }

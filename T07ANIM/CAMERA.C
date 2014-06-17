@@ -1,5 +1,6 @@
 /* NI01, STARTUP.C */
 
+#include "units.h"
 #include "anim.h"
 
 typedef struct tagin1UNIT_CAMERA
@@ -23,11 +24,28 @@ static VOID CAMERAUnitClose( in1UNIT_CAMERA *Unit, in1ANIM *Ani )
 } 
 
 /* CAMERA unit
+ * Collision function
+ * base unit Collision arguments */
+static VOID CAMERAUnitCollision( in1UNIT_CAMERA *Unit, in1ANIM *Ani )
+{
+  static INT i = -1;
+  if (i == -1 || i >= Ani->NumOfUnits)
+    for (i = 0; i < Ani->NumOfUnits; i++)
+      if (Ani->Units[i]->TipeID == IN1_UNIT_GOST)
+        break;
+  if (i >= 0 && i < Ani->NumOfUnits)
+  {
+    Ani->Eye = ((in1UNIT_GOST *)(Ani->Units[i]))->Head;
+  }
+} 
+
+
+/* CAMERA unit
  * response function
  * base unit response arguments */
 static VOID CAMERAUnitResponse( in1UNIT_CAMERA *Unit, in1ANIM *Ani )
 {
-  MATRIXd R;
+/*  MATRIXd R;
   VEC M;
   if(Ani->KeysClick['C'])
     Unit->MODE = (Unit->MODE + 1) % 2;
@@ -74,7 +92,7 @@ static VOID CAMERAUnitResponse( in1UNIT_CAMERA *Unit, in1ANIM *Ani )
     Ani->Eye.Right = VectorTransformer( Ani->Eye.Right, R );
     Ani->Eye.Up = VectorTransformer( Ani->Eye.Up, R );
     Ani->Eye.Loc = PointTransformer( VecAddVec( Ani->Eye.Loc, M ), R );
-  }
+  }*/
 } 
 
 /* CAMERA unit
@@ -86,7 +104,7 @@ static VOID CAMERAUnitRender( in1UNIT_CAMERA *Unit, in1ANIM *Ani )
 
 /* CAMERA unit
  * creation function */
-in1UNIT * IN1_CAMERAUnitCreate( VOID )
+in1UNIT * IN1_CAMERAUnitCreate( INT ID )
 {
   /* CAMERA unit cpeation pointer */
   in1UNIT_CAMERA *Unit;
@@ -96,10 +114,13 @@ in1UNIT * IN1_CAMERAUnitCreate( VOID )
   /* no awailabe memory | CAMERA unit model ERROR */
     return NULL;
   /* CAMERA unit buse function initialization */
+  Unit->ID = ID;
+  Unit->TipeID = IN1_UNIT_EYE;
   Unit->Init = (VOID *)CAMERAUnitInit;
   Unit->Close = (VOID *)CAMERAUnitClose;
   Unit->Response = (VOID *)CAMERAUnitResponse;
   Unit->Render = (VOID *)CAMERAUnitRender;
+  Unit->Collision = (VOID *)CAMERAUnitCollision; 
   /* CAMERA unit data initialization */
   Unit->MODE = 1;
   /* ready CAMERA unit pointer return */

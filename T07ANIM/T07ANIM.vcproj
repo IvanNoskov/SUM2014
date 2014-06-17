@@ -253,6 +253,18 @@
 						>
 					</File>
 					<File
+						RelativePath=".\GOST.C"
+						>
+					</File>
+					<File
+						RelativePath=".\House.c"
+						>
+					</File>
+					<File
+						RelativePath=".\KEY.C"
+						>
+					</File>
+					<File
 						RelativePath=".\UnitInfo.c"
 						>
 					</File>

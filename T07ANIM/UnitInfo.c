@@ -32,7 +32,7 @@ static VOID INFODisplayUnitResponse( in1UNIT *Unit, in1ANIM *Ani )
 
 /* INFO Display unit
  * creation function */
-in1UNIT * IN1_INFODisplayUnitCreate( VOID )
+in1UNIT * IN1_INFODisplayUnitCreate( INT ID )
 {
   /* INFODisplay unit cpeation pointer */
   in1UNIT *Unit;
@@ -42,6 +42,8 @@ in1UNIT * IN1_INFODisplayUnitCreate( VOID )
   /* no awailabe memory | INFODisplay unit model ERROR */
     return NULL;
   /* INFODisplay unit buse function initialization */
+  Unit->ID = ID;
+  Unit->TipeID = IN1_UNIT_INFO;
   Unit->Render = (VOID *)INFODisplayUnitRender;
   Unit->Response = (VOID *)INFODisplayUnitResponse;
   /* ready INFODisplay unit pointer return */
