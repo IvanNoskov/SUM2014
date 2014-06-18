@@ -28,6 +28,7 @@ uniform mat4 MatrWorldInverseTranspose;
 uniform mat4 MatrWorld;
 
 uniform vec3 Eye;
+uniform vec3 Lantern;
 
 /* Текстура */
 uniform sampler2D DrawTexture;
@@ -39,25 +40,28 @@ in vec2 DrawTexCoord;
 in vec3 DrawNormal;
 in vec4 CameraPos;
 
+in vec4 TstPos;
+
 vec3 Illum( vec3 N )
 {
   vec4 texc = texture2D(DrawTexture, DrawTexCoord.xy);
-  vec3 color = Ka;
-  vec3 Dir = mat3(MatrWorld) * ViewDir; 
 
-  vec3 lPos = vec3(0, 3, 0);
-  vec3 l = normalize(lPos - DrawPos);
+  vec3 color = Ka;
+  vec3 Dir = normalize(ViewDir); 
+
+  vec3 l = normalize(Lantern - DrawPos);
 
   N = faceforward(N, ViewDir, N);
   float nl = dot(N, l);
   if (nl > 0)
-    color += (texc.xyz * Kd + vec3(0, 0, 0)) * nl;
+    color += (texc.xyz * Kd) * nl;
+    //color += vec3(1, 1, 1) * nl;
 
   vec3 R = reflect(Dir, N);
-  R = Dir - N * (2 * dot(Dir, N));
+  R = normalize( Dir - N * (2 * dot(Dir, N)) );
   float rl = dot(R, l);
   if (rl > 0)
-    color += Ks * pow(dot(R, l), 14);
+    color += Ks * pow(rl, 30);
 
   return color;
 }
@@ -66,20 +70,7 @@ vec3 Illum( vec3 N )
 /* Main function */
 void main( void )
 {
-  float start = 2.5, end = -0.61;
-  float dist = CameraPos.z;
-  if (dist < -1)
-    discard;
-  float t = 0.5;
-  if (dist > start)
-    t = 1;
-  else
-    if (dist < end)
-      t = 0;
-    else
-      t = 1 - (dist - start) / (end - start);
-  t = 1;
-  OutColor = vec4(0.3, 0.5, 0.7, 1) * (1 - t) + vec4(Illum(DrawNormal).xyz, Trans) * t;
+  OutColor = vec4(Illum(DrawNormal).xyz, Trans);
 } /* End of 'main' function */
 
 /* End of 'a.frag' file */

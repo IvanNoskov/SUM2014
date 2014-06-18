@@ -151,5 +151,8 @@ VOID IN1_PrimFree( in1PRIM *P );
 /* Функция отрисовки примитива */
 VOID IN1_PrimDraw( in1PRIM *P );
 
+VOID IN1_PrimAutoNormals( in1PRIM *P );
+
+
 
 #endif /* __RENDER_H__ */

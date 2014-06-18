@@ -25,12 +25,14 @@ out vec3 DrawPos;
 out vec2 DrawTexCoord;
 out vec3 DrawNormal;
 out vec4 CameraPos;
+out vec4 TstPos;
 
 /* Main function */
 void main( void )
 {
   CameraPos = vec4(Eye.xyz, 1);
   gl_Position = MatrWVP * vec4(InPosition.xyz, 1);
+  TstPos = MatrWVP * inverse(MatrView) * vec4(InPosition.xyz, 1);
   DrawNormal = mat3(MatrWorldInverseTranspose) * InNormal;
   DrawColor = InColor;
   DrawPos = mat4x3(MatrWorld) * vec4(InPosition, 1);

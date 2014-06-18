@@ -176,9 +176,9 @@ VOID IN1_PrimDraw( in1PRIM *P )
 
   /* задаем порядок данных */
   glVertexAttribPointer(0, 3, GL_FLOAT, FALSE, sizeof(in1VERTEX), (VOID *)0);
-  glVertexAttribPointer(1, 2, GL_FLOAT, FALSE, sizeof(in1VERTEX), (VOID *)(sizeof(VEC)));
-  glVertexAttribPointer(2, 3, GL_FLOAT, FALSE, sizeof(in1VERTEX), (VOID *)(sizeof(VEC) + sizeof(in1UV)));
-  glVertexAttribPointer(3, 4, GL_FLOAT, FALSE, sizeof(in1VERTEX), (VOID *)(2 * sizeof(VEC) + sizeof(in1UV)));
+  glVertexAttribPointer(1, 2, GL_FLOAT, FALSE, sizeof(in1VERTEX), (VOID *)(sizeof(VECf)));
+  glVertexAttribPointer(2, 3, GL_FLOAT, FALSE, sizeof(in1VERTEX), (VOID *)(sizeof(VECf) + sizeof(in1UV)));
+  glVertexAttribPointer(3, 4, GL_FLOAT, FALSE, sizeof(in1VERTEX), (VOID *)(2 * sizeof(VECf) + sizeof(in1UV)));
   glEnableVertexAttribArray(0);
   glEnableVertexAttribArray(1);
   glEnableVertexAttribArray(2);
@@ -213,6 +213,38 @@ VOID IN1_PrimDraw( in1PRIM *P )
     }
   }
   glUseProgram(0);
-} /* End of 'IN1_PrimFree' function */
+} 
 
-/* END OF 'PRIM.C' FILE */
+VOID IN1_PrimAutoNormals( in1PRIM *P )
+{
+  INT i;
+  VECf Zer = ShaderVecTransfrov( VecSet( 0, 0, 0 ) );
+
+  if (P->Type == IN1_PRIM_TRIMESH)
+  {
+    /* обнулили все нормали вершин */
+    for (i = 0; i < P->NumOfV; i++)
+      P->V[i].N = Zer;
+
+    /* вычислили нормали всех граней и добавили их к образующих их вершинам */
+    for (i = 0; i < P->NumOfI / 3; i++)
+    {
+      INT *n = P->I + i * 3;
+      VEC norm;
+
+      norm =
+        VecNormalize( VecCrossVec( VecSubVec( VecRedTransfrov( P->V[n[1]].P ), VecRedTransfrov( P->V[n[0]].P) ),
+                                                       VecSubVec( VecRedTransfrov( P->V[n[2]].P ), VecRedTransfrov( P->V[n[0]].P) ) ) );
+      P->V[n[0]].N = ShaderVecTransfrov( VecAddVec( VecRedTransfrov( P->V[n[0]].N ), norm ) );
+      P->V[n[1]].N = ShaderVecTransfrov( VecAddVec( VecRedTransfrov( P->V[n[1]].N ), norm ) );
+      P->V[n[2]].N = ShaderVecTransfrov( VecAddVec( VecRedTransfrov( P->V[n[2]].N ), norm ) );
+    }
+
+    /* нормируем */
+    for (i = 0; i < P->NumOfV; i++)
+      P->V[i].N = ShaderVecTransfrov( VecNormalize( VecRedTransfrov( P->V[i].N ) ) );
+  }
+  else
+  {
+  }
+}

@@ -124,12 +124,17 @@ VOID IN1_GeomDraw( in1GEOM *G )
   if (loc != -1)
     glUniform1f(loc, IN1_Anim.Time);
 
-  V = ShaderVecTransfrov(IN1_Anim.Eye.Loc);
+  V = ShaderVecTransfrov( IN1_Anim.Eye.Loc );
   loc = glGetUniformLocation(IN1_ShaderProg, "Eye");
   if (loc != -1)
     glUniform3fv(loc, 1, &V.X);
 
-  V = ShaderVecTransfrov(IN1_Anim.Eye.Dir);
+  V = ShaderVecTransfrov( VecAddVec( IN1_Anim.Eye.Loc, VecMulNum( IN1_Anim.Eye.Up, 0.3 ) ) );
+  loc = glGetUniformLocation(IN1_ShaderProg, "Lantern");
+  if (loc != -1)
+    glUniform3fv(loc, 1, &V.X);
+
+  V = ShaderVecTransfrov( IN1_Anim.Eye.Dir );
   loc = glGetUniformLocation(IN1_ShaderProg, "ViewDir");
   if (loc != -1)
     glUniform3fv(loc, 1, &V.X);
@@ -173,11 +178,11 @@ VOID IN1_GeomDraw( in1GEOM *G )
         loc = glGetUniformLocation(IN1_ShaderProg, "DrawTexture");
         if (loc != -1)
           glUniform1i(loc, 0);
-        /*glEnable(GL_TEXTURE_2D);*/
-        /*glActiveTexture(GL_TEXTURE0);*/
+        glEnable(GL_TEXTURE_2D);
+        glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, G->Mtls[mtl].TexNo);
-        /*glActiveTexture(GL_TEXTURE1);*/
-        glBindTexture(GL_TEXTURE_2D, G->Mtls[mtl].TexNo);
+        /*glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, G->Mtls[mtl].TexNo);*/
       }
       loc = glGetUniformLocation(IN1_ShaderProg, "Ka");
       if (loc != -1)

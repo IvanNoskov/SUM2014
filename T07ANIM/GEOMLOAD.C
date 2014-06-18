@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <math.h>
 
 #include "anim.h"
 
@@ -129,6 +130,20 @@ static CHAR
  *       CHAR *FileName;
  * ВОЗВРАЩАЕМОЕ ЗНАЧЕНИЕ: Нет.
 */
+static VOID AddDefolteMatreial( in1GEOM *G )
+{
+  in1MATERIAL DefMat;
+  DefMat.Ka = ShaderVecTransfrov(VecSet(0.1, 0.1, 0.1));
+  DefMat.Kd = ShaderVecTransfrov(VecSet( rand() * 1.0 / RAND_MAX, rand() * 1.0 / RAND_MAX, rand() * 1.0 / RAND_MAX));
+  DefMat.Ks = ShaderVecTransfrov(VecSet(0.0, 0.0, 0.0));
+  DefMat.Phong = 30;
+  DefMat.TexNo = 0;
+  DefMat.Trans = 1;
+  strcpy(DefMat.Name, "Default Material SPR 2014");
+  DefMat.MapD[0] = 0;
+  IN1_GeomAddMaterial(G, &DefMat);
+}
+
 static VOID LoadMaterials( in1GEOM *G, CHAR *FileName )
 {
   FILE *F;
@@ -256,7 +271,10 @@ BOOL IN1_GeomLoad( in1GEOM *G, CHAR *FileName )
       pn++;
 
   if (pn == 0)
+  {
+    AddDefolteMatreial( G );
     pn = 1; /* материалы не использовались */
+  }
 
   /* загружаем:
    *   вершины                        vn
@@ -394,6 +412,7 @@ BOOL IN1_GeomLoad( in1GEOM *G, CHAR *FileName )
   {
     INT minv, maxv, j;
     in1PRIM prim;
+    BOOL isNeedNormal = FALSE;
 
     minv = maxv = ReadF[PrimInfo[p].First][0];
     for (i = PrimInfo[p].First; i <= PrimInfo[p].Last; i++)
@@ -416,6 +435,8 @@ BOOL IN1_GeomLoad( in1GEOM *G, CHAR *FileName )
       prim.V[i].P = ShaderVecTransfrov(ReadV[VertexRefs[minv + i].Nv]);
       if ((n = VertexRefs[minv + i].Nn) != -1)
         prim.V[i].N = ShaderVecTransfrov(ReadN[n]);
+      else
+        isNeedNormal = TRUE;
       if ((n = VertexRefs[minv + i].Nt) != -1)
         prim.V[i].T = ReadUV[n];
     }
@@ -423,6 +444,8 @@ BOOL IN1_GeomLoad( in1GEOM *G, CHAR *FileName )
     for (i = 0; i < fn; i++)
       for (j = 0; j < 3; j++)
         prim.I[i * 3 + j] = ReadF[PrimInfo[p].First + i][j] - minv;
+    if (isNeedNormal)
+      IN1_PrimAutoNormals( &prim );
     prim.Mtl = PrimInfo[p].Mtl;
     IN1_GeomAddPrim(G, &prim);
   }
