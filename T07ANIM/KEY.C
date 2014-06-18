@@ -14,6 +14,9 @@ typedef struct tagin1UNIT_KEY
   MATRIXd Rot,          /* Key Rotation matrix        */
           Trans;        /* Key Translation matrix     */
   BOOL isFound;         /* TRUE if key has been found */
+  INT a_Buf[2],
+      a_Src[2];
+  INT L_difr;
   INT SEED;
 } in1UNIT_KEY;
 
@@ -22,6 +25,37 @@ typedef struct tagin1UNIT_KEY
  * base unit initialization arguments */
 static VOID KEYUnitInit( in1UNIT_KEY *Unit, in1ANIM *Ani )
 {
+  INT format;
+  UINT size, freq;
+  VOID *mem;
+  CHAR loop;
+
+  alGenBuffers(2, Unit->a_Buf);
+
+  alutLoadWAVFile("Z:\\SUM2014\\T07ANIM\\AUDIO\\KeyCollect.wav", &format, &mem,
+    &size, &freq, &loop);
+  alBufferData(Unit->a_Buf[0], format, mem, size, freq);
+  alutUnloadWAV(format, mem, size, freq);
+
+  alutLoadWAVFile("Z:\\SUM2014\\T07ANIM\\AUDIO\\KeyNear.wav", &format, &mem,
+    &size, &freq, &loop);
+  alBufferData(Unit->a_Buf[1], format, mem, size, freq);
+  alutUnloadWAV(format, mem, size, freq);
+
+  alGenSources(2, Unit->a_Src);
+
+  alSourcei(Unit->a_Src[0], AL_BUFFER, Unit->a_Buf[0]); /* закрепл€ем буфер за источником */
+  alSourcef(Unit->a_Src[0], AL_PITCH, 3);      /* скорость воспроизведени€: 1.0 - обычна€*/
+  alSourcef(Unit->a_Src[0], AL_GAIN, 6);          /* громкость: 1.0 Ц обычна€ */
+  alSourcei(Unit->a_Src[0], AL_LOOPING, 0);       /* флаг повтора: 0 Ц нет, 1 Ц бесконечно */
+
+  alSourcei(Unit->a_Src[1], AL_BUFFER, Unit->a_Buf[1]);
+  alSourcef(Unit->a_Src[1], AL_PITCH, 0.5);
+  alSourcef(Unit->a_Src[1], AL_GAIN, 0.125);
+  alSourcei(Unit->a_Src[1], AL_LOOPING, 1);
+
+  alSourcePlay( Unit->a_Src[1] );
+
 } 
 
 /* KEY unit
@@ -29,6 +63,8 @@ static VOID KEYUnitInit( in1UNIT_KEY *Unit, in1ANIM *Ani )
  * base unit deinitialization arguments */
 static VOID KEYUnitClose( in1UNIT_KEY *Unit, in1ANIM *Ani )
 {
+  alDeleteBuffers( 2, Unit->a_Buf );
+  alDeleteSources( 2, Unit->a_Src );
 } 
 
 /* KEY unit
@@ -37,16 +73,20 @@ static VOID KEYUnitClose( in1UNIT_KEY *Unit, in1ANIM *Ani )
 static VOID KEYUnitCollision( in1UNIT_KEY *Unit, in1ANIM *Ani )
 {
   static INT i = -1;
+  static DBL Ln = 10000;
   if (i == -1 || i >= Ani->NumOfUnits)
     for (i = 0; i < IN1_MAX_UNITS; i++)
       if (Ani->Units[i]->TipeID == IN1_UNIT_GOST)
         break;
   if (i >= 0 && i < Ani->NumOfUnits)
-    if (VecLen2( VecSubVec( Unit->Pos, ((in1UNIT_GOST *)(Ani->Units[i]))->Head.Loc ) ) < 3 && !Unit->isFound)
+  {
+    if ( (Ln = VecLen2( VecSubVec( Unit->Pos, ((in1UNIT_GOST *)(Ani->Units[i]))->Head.Loc ) )) < 1.5 && !Unit->isFound)
     {
+      alSourcePlay( Unit->a_Src[0] );
       Unit->isFound = TRUE;
       ((in1UNIT_GOST *)(Ani->Units[i]))->Key_found++;
     }
+  }
 } 
 
 /* KEY unit

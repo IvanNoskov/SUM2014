@@ -105,6 +105,11 @@ BOOL IN1_AnimInit( HWND hWnd )
   IN1_Anim.PrjMProjection = MatrProjection( -IN1_Anim.PrjW / 2, IN1_Anim.PrjW / 2, -IN1_Anim.PrjH / 2, IN1_Anim.PrjH / 2, IN1_Anim.PrjDist, IN1_Anim.PrjFar);
   IN1_AnimPrjMResponse();
 
+  alutInit( NULL, 0 );
+  alGetError();
+
+  IN1_Anim.IsPause = TRUE;
+
   return TRUE;
 }
 

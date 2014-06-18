@@ -25,7 +25,7 @@ typedef struct tagin1UNIT_GOST
       Key_Needet;       /* How many keys gost need    */
 } in1UNIT_GOST;
 
-in1UNIT * IN1_GOSTUnitCreate( INT ID );
+in1UNIT * IN1_GOSTUnitCreate( INT ID, INT NeedKeys );
 
 in1UNIT * IN1_HOUSEUnitCreate( INT ID );
 
