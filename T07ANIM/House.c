@@ -20,7 +20,7 @@ typedef struct tagin1UNIT_HOUSE
 static VOID HOUSEUnitInit( in1UNIT_HOUSE *Unit, in1ANIM *Ani )
 
 {
-  IN1_GeomLoad( &(Unit->Model), "Z:\\sum2014\\T07ANIM\\Models\\Houses\\house1.object" );
+  IN1_GeomLoad( &(Unit->Model), "Models\\Houses\\house1.object" );
 ///  IN1_GeomLoad( &(Unit->Model), "Z:\\sum2014\\T07ANIM\\Models\\Avent\\avent.object" );
 ///  IN1_GeomLoad( &(Unit->Model), "Z:\\sum2014\\T07ANIM\\Models\\cow.object" );
 } 

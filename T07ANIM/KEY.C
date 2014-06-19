@@ -32,12 +32,12 @@ static VOID KEYUnitInit( in1UNIT_KEY *Unit, in1ANIM *Ani )
 
   alGenBuffers(2, Unit->a_Buf);
 
-  alutLoadWAVFile("Z:\\SUM2014\\T07ANIM\\AUDIO\\KeyCollect.wav", &format, &mem,
+  alutLoadWAVFile("AUDIO\\KeyCollect.wav", &format, &mem,
     &size, &freq, &loop);
   alBufferData(Unit->a_Buf[0], format, mem, size, freq);
   alutUnloadWAV(format, mem, size, freq);
 
-  alutLoadWAVFile("Z:\\SUM2014\\T07ANIM\\AUDIO\\KeyNear.wav", &format, &mem,
+  alutLoadWAVFile("AUDIO\\KeyNear.wav", &format, &mem,
     &size, &freq, &loop);
   alBufferData(Unit->a_Buf[1], format, mem, size, freq);
   alutUnloadWAV(format, mem, size, freq);
@@ -49,7 +49,7 @@ static VOID KEYUnitInit( in1UNIT_KEY *Unit, in1ANIM *Ani )
   alSourcef(Unit->a_Src[0], AL_GAIN, 6);          /* громкость: 1.0 Ц обычна€ */
   alSourcei(Unit->a_Src[0], AL_LOOPING, 0);       /* флаг повтора: 0 Ц нет, 1 Ц бесконечно */
 
-  alSourcei(Unit->a_Src[1], AL_BUFFER, Unit->a_Buf[1]);
+  alSourcei(Unit->a_Src[1], AL_BUFFER, Unit->a_Buf[1]);                                                                          
   alSourcef(Unit->a_Src[1], AL_PITCH, 0.5);
   alSourcef(Unit->a_Src[1], AL_GAIN, 0.125);
   alSourcei(Unit->a_Src[1], AL_LOOPING, 1);

@@ -6,7 +6,6 @@
 #include <windows.h>
 
 #define WND_CLASS_NAME "my_fist's_window_class"
-<<<<<<< HEAD
 #define PI ((double)(3.1415926535897))
 
 void DrawMSec (HDC hDCP, double A, int X, int Y)
@@ -143,14 +142,10 @@ void DrawHour (HDC hDCP, double A, int X, int Y)
   T[3].y = Y + 35 * cos( A - PI );
   Polygon( hDCP, T, 5 );
 }
-=======
-#define PI (3,1415926535897)
->>>>>>> parent of 92d552e... T02CLOCK V1.0
 
 void DrawDayOfWeek (HDC hDCP, double A, int X, int Y)
 {
   static POINT T[4];
-<<<<<<< HEAD
   SetTextColor( hDCP, RGB( 0, 0, 0 ) );
   SetBkMode( hDCP, TRANSPARENT );
   TextOut( hDCP, X + 160 * sin(PI * 2 / 7 * 0) - 8, Y - 160 * cos(PI * 2 / 7 * 0) - 8, "SU", 2);
@@ -160,17 +155,6 @@ void DrawDayOfWeek (HDC hDCP, double A, int X, int Y)
   TextOut( hDCP, X + 160 * sin(PI * 2 / 7 * 4) - 8, Y - 160 * cos(PI * 2 / 7 * 4) - 8, "TH", 2);
   TextOut( hDCP, X + 160 * sin(PI * 2 / 7 * 5) - 8, Y - 160 * cos(PI * 2 / 7 * 5) - 8, "FR", 2);
   TextOut( hDCP, X + 160 * sin(PI * 2 / 7 * 6) - 8, Y - 160 * cos(PI * 2 / 7 * 6) - 8, "SA", 2);
-=======
-  T[0].x = X + 50 * cos( A );
-  T[0].y = Y - 50 * sin( A );
-  T[1].x = X + 40 * cos( A + 1 );
-  T[1].y = Y - 40 * sin( A + 1 );
-  T[2].x = X + 70 * cos( A + PI );
-  T[2].y = Y - 70 * sin( A + PI );
-  T[3].x = X + 40 * cos( A - 1 );
-  T[3].y = Y - 40 * sin( A - 1 );
-
->>>>>>> parent of 92d552e... T02CLOCK V1.0
   SelectObject( hDCP, GetStockObject( DC_PEN ) );
   SelectObject( hDCP, GetStockObject( DC_BRUSH ) );
   T[0].x = X - 30 * sin( A );
@@ -182,12 +166,7 @@ void DrawDayOfWeek (HDC hDCP, double A, int X, int Y)
   T[3].x = X - 10 * sin( A - 1 );
   T[3].y = Y + 10 * cos( A - 1 );
   SetDCPenColor( hDCP, RGB( 0, 0, 0 ) );
-<<<<<<< HEAD
   SetDCBrushColor( hDCP, RGB( 10, 10, 10 ) );
-=======
-  SetDCBrushColor( hDCP, RGB( 255, 100, 100 ) );
-
->>>>>>> parent of 92d552e... T02CLOCK V1.0
   Polygon( hDCP, T, 4 );
 }
 
@@ -222,6 +201,7 @@ VOID FlipFullScreen( HWND hWnd )
 }
 
 
+
 LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
 {
   HDC hDC;
@@ -231,8 +211,8 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam
   static INT W, H, SM;
   static HDC hMemDC, hDCLogo;
   static HBITMAP hBm, hBmLogo;
+  static BITMAP BmLogo;
   SYSTEMTIME Time;
-<<<<<<< HEAD
   static double Hour, Min, Sec, DayOfWeek, MSec;
   switch(Msg)
   {
@@ -240,17 +220,6 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam
     SetTimer( hWnd, 30, 1, NULL );
     hBmLogo = LoadImage( NULL, "clockface.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
     GetObject(hBmLogo, sizeof(BITMAP), &BmLogo);
-=======
-  static double Hour, Min, Sec;
-  static POINT Trangle[3] = {{10, 10}, {100, 15}, {15, 100}};
-  switch(Msg)
-  {
-  case WM_CREATE:
-    hDC = GetDC( hWnd );
-    hMemDC = CreateCompatibleBitmap( hDC, W, H);
-    ReleaseDC ( hWnd, hDC );
-    SetTimer( hWnd, 30, 100, NULL );
->>>>>>> parent of 92d552e... T02CLOCK V1.0
     return 0;
   case WM_SIZE:
     H = HIWORD(lParam);
@@ -274,35 +243,31 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam
       FlipFullScreen( hWnd );
     break;
   case WM_TIMER:
-<<<<<<< HEAD
     GetLocalTime( &Time );
     MSec = (double)2 * PI * (Time.wMilliseconds / 1000.0);                                                                                       
     Sec = (double)2 * PI * (Time.wSecond / 60.0 + Time.wMilliseconds / 60000.0);
     Min = (double)2 * PI * (Time.wMinute * 60 + Time.wSecond) / (60 * 60);
     Hour = (double)2 * PI * ((Time.wHour % 12) * 60 * 60 + Time.wMinute * 60 + Time.wSecond) / (12 * 60 * 60);
     DayOfWeek = (double)2 * PI * ((Time.wDayOfWeek + Time.wHour / 24.0) / 7.0);
-=======
-    GetSystemTime( &Time );
-    Sec = 60.0 * 2 * PI / Time.wSecond;
-    Min = 60 * 60.0 * 2 * PI / (60 * Time.wMinute + Time.wSecond);
-    Hour = 12 * 60 * 60.0 * 2 * PI / (120 * (Time.wHour % 12) + 60 * Time.wMinute + Time.wSecond);
->>>>>>> parent of 92d552e... T02CLOCK V1.0
     InvalidateRect( hWnd, NULL, FALSE);
     break;
   case WM_DESTROY:
     KillTimer(hWnd, 30);
     DeleteObject( hBm );
-    DeleteDC( hMemDC );
+    DeleteObject ( hBmLogo );
     PostQuitMessage(0);
     return 0;
   case WM_PAINT:
     hDC = BeginPaint( hWnd, &ps );
-    SelectObject( hDC, GetStockObject( DC_PEN ) );
-    SelectObject( hDC, GetStockObject( DC_BRUSH ) );
-    SetDCPenColor( hDC, RGB( 0, 0, 0 ) );
-    SetDCBrushColor( hDC, RGB( 255, 0, 255 ) );
+    hMemDC = CreateCompatibleDC( hDC );
+    hDCLogo = CreateCompatibleDC( hDC );
+    SelectObject( hMemDC, hBm );
+    SelectObject( hDCLogo, hBmLogo );
+    SelectObject( hMemDC, GetStockObject( DC_PEN ) );
+    SelectObject( hMemDC, GetStockObject( DC_BRUSH ) );
+    SetDCPenColor( hMemDC, RGB( 0, 0, 0 ) );
+    SetDCBrushColor( hMemDC, RGB( 255, 255, 255 ) );
     Rectangle( hMemDC, 0, 0, W, H);
-<<<<<<< HEAD
     BitBlt( hMemDC, (W - BmLogo.bmWidth) / 2, (H - BmLogo.bmHeight) / 2, BmLogo.bmWidth, BmLogo.bmHeight, hDCLogo, 0, 0, SRCCOPY);
     DrawDayOfWeek( hMemDC, DayOfWeek, W / 2, H / 2 );
     DrawHour( hMemDC, Hour, W / 2, H / 2 );
@@ -313,10 +278,6 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam
     /*  StretchBlt( hDC, (W - SM) / 2, (H - SM) / 2, SM, SM, hMemDC, (W - BmLogo.bmWidth) / 2, (H - BmLogo.bmHeight) / 2, (W + BmLogo.bmWidth) / 2, (H + BmLogo.bmHeight) / 2, SRCCOPY);*/
     DeleteDC( hMemDC );
     DeleteDC( hDCLogo );
-=======
-    DrawHour(hMemDC, Hour, W / 2, H / 2);
-    BitBlt(hDC, 0, 0, W, H, hMemDC, 0, 0, SRCCOPY);
->>>>>>> parent of 92d552e... T02CLOCK V1.0
     EndPaint( hWnd, &ps );
     break;
   }
